@@ -9,80 +9,80 @@ importers:
   .:
     dependencies:
       '@clerk/clerk-react':
-        specifier: ^5.4.1
+        specifier: 5.4.1
         version: 5.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@clerk/types':
-        specifier: ^4.13.1
+        specifier: 4.13.1
         version: 4.13.1
       '@faker-js/faker':
-        specifier: ^8.4.1
+        specifier: 8.4.1
         version: 8.4.1
       '@paralleldrive/cuid2':
-        specifier: ^2.2.2
+        specifier: 2.2.2
         version: 2.2.2
       '@tanstack/react-form':
-        specifier: ^0.29.1
+        specifier: 0.29.1
         version: 0.29.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)
       '@tanstack/react-query':
-        specifier: ^5.51.23
+        specifier: 5.51.23
         version: 5.51.23(react@18.3.1)
       '@tanstack/react-query-devtools':
-        specifier: ^5.51.23
+        specifier: 5.51.23
         version: 5.51.23(@tanstack/react-query@5.51.23(react@18.3.1))(react@18.3.1)
       '@types/lodash.mergewith':
-        specifier: ^4.6.9
+        specifier: 4.6.9
         version: 4.6.9
       '@types/object.omit':
-        specifier: ^3.0.3
+        specifier: 3.0.3
         version: 3.0.3
       date-fns:
-        specifier: ^3.6.0
+        specifier: 3.6.0
         version: 3.6.0
       lodash.mergewith:
-        specifier: ^4.6.2
+        specifier: 4.6.2
         version: 4.6.2
       next:
         specifier: 14.2.5
         version: 14.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       object.omit:
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0
       react:
-        specifier: ^18
+        specifier: '18'
         version: 18.3.1
       react-dom:
-        specifier: ^18
+        specifier: '18'
         version: 18.3.1(react@18.3.1)
       react-icons:
-        specifier: ^5.3.0
+        specifier: 5.3.0
         version: 5.3.0(react@18.3.1)
       zod:
-        specifier: ^3.23.8
+        specifier: 3.23.8
         version: 3.23.8
     devDependencies:
       '@types/node':
-        specifier: ^20
+        specifier: '20'
         version: 20.14.15
       '@types/react':
-        specifier: ^18
+        specifier: '18'
         version: 18.3.3
       '@types/react-dom':
-        specifier: ^18
+        specifier: '18'
         version: 18.3.0
       eslint:
-        specifier: ^8
+        specifier: '8'
         version: 8.57.0
       eslint-config-next:
         specifier: 14.2.5
         version: 14.2.5(eslint@8.57.0)(typescript@5.5.4)
       postcss:
-        specifier: ^8
+        specifier: '8'
         version: 8.4.41
       tailwindcss:
-        specifier: ^3.4.1
+        specifier: 3.4.10
         version: 3.4.10
       typescript:
-        specifier: ^5
+        specifier: '5'
         version: 5.5.4
 
 packages:
