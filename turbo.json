@@ -1,0 +1,45 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"inputs": ["$TURBO_DEFAULT$"],
+			"cache": false,
+			"outputs": ["$TURBO_WORKDIR/apps/dist", "$TURBO_WORKDIR/server/**"]
+		},
+		"build:server": {
+			"dependsOn": ["build"],
+			"inputs": ["$TURBO_DEFAULT$"],
+			"cache": false,
+			"outputs": ["$TURBO_WORKDIR/server/dist/**"]
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		},
+		"start": {
+			"cache": true
+		},
+		"start:pm2": {
+			"cache": false
+		},
+		"stop:pm2": {
+			"cache": false
+		},
+		"restart:pm2": {
+			"cache": false
+		},
+		"delete:pm2": {
+			"cache": false
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"https": {
+			"dependsOn": ["^dev"]
+		},
+		"start:studio": {
+			"dependsOn": ["^dev"]
+		}
+	}
+}

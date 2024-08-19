@@ -1,6 +1,6 @@
 "use client";
 
-import Input from "@/ui/input";
+import Input from "../input";
 import { toast } from "sonner";
 import { Button } from "@/ui/button";
 import { useUser } from "@clerk/nextjs";

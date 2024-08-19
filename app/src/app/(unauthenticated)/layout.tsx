@@ -23,7 +23,7 @@ export default function UnauthenticatedLayout({
 			<header className="flex items-center py-2 px-4 justify-between bg-background h-[3.25rem]">
 				<h1 className="text-xl">
 					<Link
-						href="/public"
+						href="/app/public"
 						className="py-1 pr-1 text-primary hover:text-primary-hover font-bold"
 					>
 						@maestro/clear

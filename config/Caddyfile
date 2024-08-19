@@ -1,0 +1,5 @@
+clear.lerscott.local {
+    tls internal
+    reverse_proxy http://localhost:3200
+}
+
