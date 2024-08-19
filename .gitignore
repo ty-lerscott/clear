@@ -42,3 +42,6 @@ logs
 
 # Webstorm
 .idea
+
+# Caddy
+Caddyfile
