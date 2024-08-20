@@ -1,5 +1,0 @@
-{
-	"installCommand": "pnpm i",
-	"buildCommand": "turbo build",
-
-}
