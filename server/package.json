@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "tsx --watch ./src/index.ts",
 		"build": "tsup",
-		"start": "NODE_OPTIONS=\"--import ./dist/lib/sentry.js\" node ./dist/index.js",
+		"start": "node ./dist/index.js",
 		"lint": "biome lint ./src",
 		"format": "biome format ./src --write",
 		"check": "biome check ./src"
@@ -20,9 +20,6 @@
 		"@libsql/client": "0.7.0",
 		"@paralleldrive/cuid2": "2.2.2",
 		"@repo/types": "workspace:*",
-		"@sentry/cli": "^2.33.1",
-		"@sentry/node": "8.17.0",
-		"@sentry/profiling-node": "8.17.0",
 		"@types/body-parser": "1.19.5",
 		"@types/cors": "2.8.17",
 		"@types/express": "4.17.21",

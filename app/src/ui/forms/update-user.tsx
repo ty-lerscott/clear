@@ -1,6 +1,6 @@
 "use client";
 
-import Input from "../input";
+import Input from "@/ui/input";
 import { toast } from "sonner";
 import { Button } from "@/ui/button";
 import { useUser } from "@clerk/nextjs";
@@ -9,12 +9,10 @@ import { postUser } from "@/utils/api/user";
 import { LoadableAvatar } from "@/ui/avatar";
 import getDirtyFields from "./utils/get-dirty-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
+import formSchema from "@/ui/forms/schemas/update-user";
 import { FiEye, FiEyeOff, FiTrash } from "react-icons/fi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type ChangeEvent, type FocusEventHandler, useState } from "react";
-import formSchema, {
-	type UpdateUserSchema,
-} from "@/ui/forms/schemas/update-user";
 import {
 	Form,
 	useForm,
@@ -42,7 +40,7 @@ const UpdateUserForm = ({
 		});
 	};
 
-	const form = useForm<UpdateUserSchema>({
+	const form = useForm<User>({
 		values: user,
 		defaultValues: user,
 		resolver: zodResolver(formSchema),
@@ -51,13 +49,7 @@ const UpdateUserForm = ({
 	const updateUser = useMutation({
 		mutationKey: ["updateUser"],
 		mutationFn: postUser((clerkError) => {
-			form.setError(
-				clerkError?.meta?.paramName as keyof Omit<
-					User,
-					"avatar" | "initials" | "fullName" | "emailAddress"
-				>,
-				clerkError,
-			);
+			form.setError(clerkError?.meta?.paramName as keyof User, clerkError);
 		}),
 		onSuccess: async () => {
 			await refetchUser();

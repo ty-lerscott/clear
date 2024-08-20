@@ -1,5 +1,5 @@
-import type { Conductor, Request } from "@repo/types/api";
-import type { NextFunction, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
+import type { Conductor, Request as CustomRequest } from "@repo/types/api";
 
 const Conductors = async (req: Request, res: Response, next: NextFunction) => {
 	const [basePath, ...extendedPath] = req.originalUrl
@@ -7,7 +7,7 @@ const Conductors = async (req: Request, res: Response, next: NextFunction) => {
 		.replace(/^\//, "")
 		.split("/");
 
-	const newReq = req;
+	const newReq = req as CustomRequest;
 	newReq.extendedPath = extendedPath;
 
 	const props: Conductor = {

@@ -4,7 +4,7 @@ import type {
 	NextFunction,
 } from "express";
 
-export type Primitives = string | number | boolean | null | Buffer | undefined;
+export type Primitives = string | number | boolean | null | undefined | Buffer; // is Buffer a primitive? no, but...ignore that
 export type PrimitiveObject = Record<string, Primitives | Primitives[]>;
 export type HTTP_METHODS =
 	| "GET"
@@ -27,9 +27,11 @@ export type Request = Omit<ExpressRequest, "method"> & {
 
 export type Data =
 	| Primitives
-	| Primitives[]
 	| PrimitiveObject
 	| (Primitives | PrimitiveObject)[];
+
+// TODO: propose joined extension types
+// AKA: instead of above, propose the following: (Primitives | PrimitiveObject)&[]
 
 export type Conductor = {
 	req: Request;

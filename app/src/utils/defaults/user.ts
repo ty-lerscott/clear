@@ -1,9 +1,10 @@
-import type { User } from "@/types/user";
+import type { RequiredUser } from "@/types/user";
 
-const DEFAULT_USER: User = {
+const DEFAULT_USER: RequiredUser = {
 	firstName: "",
 	lastName: "",
 	avatar: "",
+	initials: "",
 	password: "",
 	fullName: "",
 	username: "",
