@@ -65,7 +65,7 @@ const UserMenuItem = () => {
 			</DropdownMenu>
 
 			<Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
-				<DialogContent className="w-8/12">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Profile Details</DialogTitle>
 						<DialogDescription>

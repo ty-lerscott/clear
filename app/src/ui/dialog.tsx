@@ -3,8 +3,20 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-
 import { cn } from "@/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+import { buttonVariants } from "@/ui/button";
+
+const dialogContentVariants = cva("", {
+	variants: {
+		size: {
+			default: "w-full",
+		},
+	},
+	defaultVariants: {
+		size: "default",
+	},
+});
 
 const Dialog = DialogPrimitive.Root;
 
@@ -29,16 +41,21 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+export interface DialogContentProps
+	extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+		VariantProps<typeof dialogContentVariants> {}
+
 const DialogContent = React.forwardRef<
 	React.ElementRef<typeof DialogPrimitive.Content>,
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+	DialogContentProps
+>(({ className, children, size, ...props }, ref) => (
 	<DialogPortal>
 		<DialogOverlay />
 		<DialogPrimitive.Content
 			ref={ref}
 			className={cn(
-				"fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+				"fixed left-[50%] top-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+				size,
 				className,
 			)}
 			{...props}
