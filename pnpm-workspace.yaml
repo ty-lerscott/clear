@@ -3,3 +3,4 @@ packages:
   - "server"
   - "database"
   - "config"
+  - "types"
