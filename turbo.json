@@ -5,7 +5,7 @@
 			"dependsOn": ["^build"],
 			"inputs": ["$TURBO_DEFAULT$"],
 			"cache": false,
-			"outputs": ["$TURBO_WORKDIR/apps/dist", "$TURBO_WORKDIR/server/**"]
+			"outputs": ["$TURBO_WORKDIR/app/dist", "$TURBO_WORKDIR/server/**"]
 		},
 		"build:server": {
 			"dependsOn": ["build"],

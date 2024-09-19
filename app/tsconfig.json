@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"outDir": "./dist",
+		"moduleResolution": "bundler",
 		"rootDir": "../",
 		"plugins": [
 			{
@@ -11,7 +12,7 @@
 		],
 		"paths": {
 			"~/*": ["../*"],
-			"@/*": ["./src/*"]
+			"@/*": ["./*", "./src/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

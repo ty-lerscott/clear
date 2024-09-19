@@ -1,11 +1,9 @@
 import { cn } from "@/utils";
+import Providers from "@/providers";
 import type { Metadata } from "next";
-import { Toaster } from "@/ui/sonner";
 import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import setMetadata from "@/utils/metadata";
-import { ClerkProvider } from "@clerk/nextjs";
-import QueryProvider from "@/providers/react-query";
 
 import "./globals.css";
 
@@ -22,13 +20,10 @@ export default function RootLayout({
 	children: ReactNode;
 }) {
 	return (
-		<ClerkProvider>
-			<html lang="en" className="darks">
-				<body className={cn(inter.className)}>
-					<QueryProvider>{children}</QueryProvider>
-					<Toaster expand richColors />
-				</body>
-			</html>
-		</ClerkProvider>
+		<html lang="en" className="darks">
+			<body className={cn(inter.className)}>
+				<Providers>{children}</Providers>
+			</body>
+		</html>
 	);
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import User from "@/ui/user";
+import User from "@/ui/menu/user";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Separator from "@/ui/separator";
@@ -12,7 +12,7 @@ export const metadata: Metadata = setMetadata({
 	description: "Cover Letter Engine & Application Review",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: ReactNode;

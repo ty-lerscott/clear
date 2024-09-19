@@ -1,10 +1,9 @@
-import type { User } from "@/types/user";
-import StatusCodes from "@/app/api/utils/status-codes";
+import type { User } from "@repo/types/user";
+import StatusCodes from "@repo/config/src/status-codes";
 import type { DefaultError, Response } from "@/types/api";
 import { type NextRequest, NextResponse } from "next/server";
 import {
 	getAuth,
-	currentUser,
 	clerkClient,
 	type User as ClerkUser,
 } from "@clerk/nextjs/server";
@@ -29,27 +28,6 @@ const normalize = (clerkUser: ClerkUser | null): User | undefined => {
 		...name,
 		emailAddress: emailAddresses[0].emailAddress,
 	} as User;
-};
-
-const get = async (req: NextRequest): Promise<Response<User>> => {
-	const { userId } = getAuth(req);
-
-	if (!userId) {
-		return {
-			status: StatusCodes.NOT_FOUND,
-			error: {
-				message: "User not found",
-			},
-		};
-	}
-
-	const clerkUser = await currentUser();
-	const normalizedUser = normalize(clerkUser);
-
-	return {
-		data: normalizedUser,
-		status: StatusCodes.OK,
-	};
 };
 
 const post = async (req: NextRequest): Promise<Response<User>> => {
@@ -82,14 +60,8 @@ const post = async (req: NextRequest): Promise<Response<User>> => {
 	}
 };
 
-export async function GET(req: NextRequest) {
-	const { status, data, error } = await get(req);
-
-	return NextResponse.json(data || error, { status });
-}
-
 export async function POST(req: NextRequest) {
 	const { status, data, error } = await post(req);
 
-	return NextResponse.json(data || error, { status });
+	return NextResponse.json({ data, error }, { status });
 }

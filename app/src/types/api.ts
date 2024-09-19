@@ -5,5 +5,5 @@ export type DefaultError = {
 export type Response<T extends Record<string, unknown>> = {
 	data?: T;
 	error?: DefaultError;
-	status: number;
+	status?: number;
 };

@@ -1,18 +1,26 @@
 "use client";
 
+import { toast } from "sonner";
 import type { ReactNode } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
 	isServer,
+	QueryCache,
 	QueryClient,
 	QueryClientProvider,
 	defaultShouldDehydrateQuery,
 } from "@tanstack/react-query";
+import { Toaster } from "@/ui/sonner";
 
 const IS_LOCAL = process.env.NEXT_PUBLIC_APP_ENV === "development";
 
-const makeQueryClient = () => {
-	return new QueryClient({
+const makeQueryClient = () =>
+	new QueryClient({
+		queryCache: new QueryCache({
+			onError: (error) => {
+				toast.error(error.message);
+			},
+		}),
 		defaultOptions: {
 			queries: {
 				staleTime: 60 * 1000,
@@ -25,11 +33,10 @@ const makeQueryClient = () => {
 			},
 		},
 	});
-};
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
-export function getQueryClient() {
+export const getQueryClient = () => {
 	if (isServer) {
 		// Server: always make a new query client
 		return makeQueryClient();
@@ -42,7 +49,7 @@ export function getQueryClient() {
 		if (!browserQueryClient) browserQueryClient = makeQueryClient();
 		return browserQueryClient;
 	}
-}
+};
 
 const QueryProvider = ({ children }: { children: ReactNode }) => {
 	const queryClient = getQueryClient();
@@ -50,6 +57,7 @@ const QueryProvider = ({ children }: { children: ReactNode }) => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			{children}
+			<Toaster expand richColors />
 			{IS_LOCAL ? <ReactQueryDevtools /> : null}
 		</QueryClientProvider>
 	);

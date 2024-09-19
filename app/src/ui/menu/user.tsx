@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Skeleton from "@/ui/skeleton";
 import { useClerk } from "@clerk/nextjs";
-import { getUser } from "@/utils/api/user";
+import type { User } from "@repo/types/user";
+import { useApi } from "@/src/providers/api";
 import { useQuery } from "@tanstack/react-query";
 import UpdateUserForm from "@/ui/forms/update-user";
 import { LoadableAvatar } from "@/ui/avatar";
@@ -27,14 +28,16 @@ const UserMenuItem = () => {
 	const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
 	const { signOut: clerkSignOut } = useClerk();
 
-	const { data: user, isLoading } = useQuery({
-		queryKey: ["getUser"],
-		queryFn: getUser,
-	});
-
 	const handleSignOut = async () => {
 		await clerkSignOut({ redirectUrl: "/" });
 	};
+
+	const { isLoading, data: user } = useQuery({
+		queryKey: ["fetchUser"],
+		queryFn: useApi<User>("/user", {
+			method: "POST",
+		}),
+	});
 
 	return (
 		<>

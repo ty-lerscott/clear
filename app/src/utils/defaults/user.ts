@@ -1,4 +1,4 @@
-import type { RequiredUser } from "@/types/user";
+import type { RequiredUser } from "@repo/types/user";
 
 const DEFAULT_USER: RequiredUser = {
 	firstName: "",

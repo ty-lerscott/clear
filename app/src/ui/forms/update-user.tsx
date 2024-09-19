@@ -4,9 +4,9 @@ import Input from "@/ui/input";
 import { toast } from "sonner";
 import { Button } from "@/ui/button";
 import { useUser } from "@clerk/nextjs";
-import type { User } from "@/types/user";
-import { postUser } from "@/utils/api/user";
+import type { User } from "@repo/types/user";
 import { LoadableAvatar } from "@/ui/avatar";
+import { useApi } from "@/src/providers/api";
 import getDirtyFields from "./utils/get-dirty-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import formSchema from "@/ui/forms/schemas/update-user";
@@ -32,10 +32,11 @@ const UpdateUserForm = ({
 	const [isVisible, setIsVisible] = useState(false);
 	const { user: clerkUser, isLoaded: isUserLoaded } = useUser();
 	const queryClient = useQueryClient();
+	const userUpdateApi = useApi<User>("/user/update");
 
 	const refetchUser = async () => {
 		await queryClient.invalidateQueries({
-			queryKey: ["getUser"],
+			queryKey: ["fetchUser"],
 			exact: false,
 		});
 	};
@@ -46,11 +47,9 @@ const UpdateUserForm = ({
 		resolver: zodResolver(formSchema),
 	});
 
-	const updateUser = useMutation({
+	const updateUser = useMutation<User>({
 		mutationKey: ["updateUser"],
-		mutationFn: postUser((clerkError) => {
-			form.setError(clerkError?.meta?.paramName as keyof User, clerkError);
-		}),
+		mutationFn: userUpdateApi,
 		onSuccess: async () => {
 			await refetchUser();
 			onSuccess();
@@ -107,6 +106,7 @@ const UpdateUserForm = ({
 	const resetForm = () => {
 		form.reset(user);
 	};
+
 	const handleBlur: FocusEventHandler<HTMLInputElement> = async (event) => {
 		const trimmedValue = event.target.value.trim();
 		if (!trimmedValue.length) {
@@ -123,7 +123,7 @@ const UpdateUserForm = ({
 	};
 
 	return (
-		<Form {...form} onSubmit={handleSubmit}>
+		<>
 			<div className="flex gap-4 items-center justify-center">
 				<LoadableAvatar
 					src={avatarSrc}
@@ -133,20 +133,21 @@ const UpdateUserForm = ({
 				/>
 
 				<div className="flex flex-col gap-4 justify-start">
-					<FormItem className="group">
-						<FormControl>
-							<>
-								<FormLabel>Avatar Image</FormLabel>
-								<Input
-									type="file"
-									accept="image/*"
-									disabled={!user}
-									onChange={handleFileChange}
-								/>
-							</>
-						</FormControl>
-						<FormMessage />
-					</FormItem>
+					<>
+						<label
+							htmlFor="avatar"
+							className="text-sm font-medium leading-none flex gap-2"
+						>
+							Avatar Image
+						</label>
+						<Input
+							type="file"
+							id="avatar"
+							accept="image/*"
+							disabled={!user}
+							onChange={handleFileChange}
+						/>
+					</>
 
 					<div>
 						<Button
@@ -162,92 +163,93 @@ const UpdateUserForm = ({
 					</div>
 				</div>
 			</div>
+			<Form {...form} onSubmit={handleSubmit}>
+				<div data-testid="FormRow" className="flex gap-4">
+					<FormField
+						name="firstName"
+						control={form.control}
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>First Name</FormLabel>
+									<FormControl>
+										<Input {...field} disabled={!user} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					<FormField
+						name="lastName"
+						control={form.control}
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Last Name</FormLabel>
+									<FormControl>
+										<Input {...field} disabled={!user} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+				</div>
 
-			<div data-testid="FormRow" className="flex gap-4">
 				<FormField
-					name="firstName"
+					name="password"
 					control={form.control}
 					render={({ field }) => {
 						return (
 							<FormItem>
-								<FormLabel>First Name</FormLabel>
+								<FormLabel>
+									<span>Change Password</span>
+									<Button
+										size="bare"
+										variant="bare"
+										options="noPadding"
+										onClick={toggleVisibility}
+									>
+										{isVisible ? <FiEye /> : <FiEyeOff />}
+									</Button>
+								</FormLabel>
 								<FormControl>
-									<Input {...field} disabled={!user} />
+									<Input
+										{...field}
+										disabled={!user}
+										onBlur={handleBlur}
+										value={field.value || ""}
+										type={isVisible ? "text" : "password"}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						);
 					}}
 				/>
-				<FormField
-					name="lastName"
-					control={form.control}
-					render={({ field }) => {
-						return (
-							<FormItem>
-								<FormLabel>Last Name</FormLabel>
-								<FormControl>
-									<Input {...field} disabled={!user} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						);
-					}}
-				/>
-			</div>
 
-			<FormField
-				name="password"
-				control={form.control}
-				render={({ field }) => {
-					return (
-						<FormItem>
-							<FormLabel>
-								<span>Change Password</span>
-								<Button
-									size="bare"
-									variant="bare"
-									options="noPadding"
-									onClick={toggleVisibility}
-								>
-									{isVisible ? <FiEye /> : <FiEyeOff />}
-								</Button>
-							</FormLabel>
-							<FormControl>
-								<Input
-									{...field}
-									disabled={!user}
-									onBlur={handleBlur}
-									value={field.value || ""}
-									type={isVisible ? "text" : "password"}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					);
-				}}
-			/>
+				<div className="grid grid-cols-2 gap-4 mt-4">
+					<Button
+						type="reset"
+						variant="outline"
+						onClick={resetForm}
+						className="shrink-0 w-full"
+						disabled={!user || !isDirty}
+					>
+						Reset
+					</Button>
 
-			<div className="grid grid-cols-2 gap-4 mt-4">
-				<Button
-					type="reset"
-					variant="outline"
-					onClick={resetForm}
-					className="shrink-0 w-full"
-					disabled={!user || !isDirty}
-				>
-					Reset
-				</Button>
-
-				<Button
-					type="submit"
-					className="shrink-0 w-full"
-					disabled={!isDirty || isSubmitting || !user || !isValid}
-				>
-					{form.formState.isSubmitting ? "Updating..." : "Update"}
-				</Button>
-			</div>
-		</Form>
+					<Button
+						type="submit"
+						className="shrink-0 w-full"
+						disabled={!isDirty || isSubmitting || !user || !isValid}
+					>
+						{form.formState.isSubmitting ? "Updating..." : "Update"}
+					</Button>
+				</div>
+			</Form>
+		</>
 	);
 };
 

@@ -1,0 +1,29 @@
+{
+	"name": "database",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "tsx ./scripts/turso.ts",
+		"start": "npm run dev",
+		"start:studio": "drizzle-kit studio",
+		"db:generate": "rm -rf ./db/migrations && drizzle-kit generate",
+		"db:push": "drizzle-kit push",
+		"db:fake": "tsx src/generators/run.ts",
+		"db:import": "tsx src/import.ts",
+		"db:truncate": "tsx ./scripts/truncate.ts"
+	},
+	"type": "module",
+	"dependencies": {
+		"@dotenvx/dotenvx": "1.6.2",
+		"@libsql/client": "0.7.0",
+		"@paralleldrive/cuid2": "2.2.2",
+		"@repo/types": "workspace:*",
+		"@types/node": "20",
+		"drizzle-kit": "0.23.0",
+		"drizzle-orm": "0.32.0",
+		"tsx": "4.16.2"
+	},
+	"devDependencies": {
+		"@faker-js/faker": "8.4.1"
+	}
+}

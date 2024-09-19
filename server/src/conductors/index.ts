@@ -1,3 +1,5 @@
+import UserConductor from "./user";
+import AuthConductor from "./auth";
 import type { NextFunction, Request, Response } from "express";
 import type { Conductor, Request as CustomRequest } from "@repo/types/api";
 
@@ -17,23 +19,16 @@ const Conductors = async (req: Request, res: Response, next: NextFunction) => {
 	};
 
 	switch (basePath) {
-		// case "download":
-		// 	await DownloadConductor(props);
-		// 	break;
-		// case "image":
-		// 	await ImageConductor(props);
-		// 	break;
-		// case "github":
-		// 	await GithubConductor(props);
-		// 	break;
-		// case "resume":
-		// 	await ResumeConductor(props);
-		// 	break;
-		// case "resumes":
-		// 	await ResumesConductor(props);
-		// 	break;
+		case "user":
+			await UserConductor(props);
+			break;
+		case "auth":
+			await AuthConductor(props);
+			break;
 		default:
-			res.send("HELLO WORLD");
+			res.json({
+				data: "HELLO WORLD",
+			});
 			break;
 	}
 
