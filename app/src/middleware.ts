@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isProtectedRoute = createRouteMatcher([
+	"/billing(.*)",
+	"/cover-letters(.*)",
+	"/overview(.*)",
+	"/tracker(.*)",
+]);
 
 export default clerkMiddleware(async (auth, req) => {
 	if (isProtectedRoute(req)) {

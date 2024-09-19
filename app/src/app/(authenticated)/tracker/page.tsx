@@ -1,4 +1,4 @@
 const Page = () => {
-	return <div>DASHBOARD</div>;
+	return <div>Tracker</div>;
 };
 export default Page;

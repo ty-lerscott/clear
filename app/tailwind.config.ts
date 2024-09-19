@@ -111,6 +111,7 @@ const config = {
 					DEFAULT: "var(--primary)",
 					text: "var(--white)",
 					hover: "var(--primary-hover)",
+					accent: "var(--primary-accent)",
 				},
 				destructive: {
 					DEFAULT: "var(--destructive)",

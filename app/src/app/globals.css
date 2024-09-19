@@ -22,6 +22,7 @@
     --accent-light: theme('colors.orange.100');
     --accent: theme('colors.orange.200');
     --disabled: theme('colors.orange.300');
+    --primary-accent: theme('colors.orange.400');
     --border: theme('colors.orange.500');
     --primary-hover: theme('colors.orange.500');
     --ring: theme('colors.orange.600');
