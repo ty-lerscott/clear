@@ -7,10 +7,10 @@ const badgeVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: "bg-gray-200 text-gray-800",
+				default: "bg-gray-200 text-gray-500",
 				linkedin: "bg-socials-linkedin text-white",
 				remote: "bg-green-500 text-white",
-				hybrid: "bg-yellow-500 text-yellow-900",
+				hybrid: "bg-yellow-200 border-yellow-400 text-yellow-600",
 				"in-office": "bg-red-700 text-red-50",
 				ready: "border-green-500 text-green-500",
 				pending: "border-blue-300 text-blue-300",

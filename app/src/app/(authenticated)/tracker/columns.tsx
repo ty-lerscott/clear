@@ -4,6 +4,10 @@ import { Badge, type BadgeProps } from "@/ui/badge";
 import { Button } from "@/ui/button";
 import dayjs from "dayjs";
 import type { ColumnDef } from "@tanstack/react-table";
+import {
+	AiOutlineSortAscending,
+	AiOutlineSortDescending,
+} from "react-icons/ai";
 
 export type JobPosting = {
 	id: string;
@@ -48,7 +52,29 @@ const formatSalary = (amount: number, currency: string) => {
 export const columns: ColumnDef<JobPosting>[] = [
 	{
 		accessorKey: "title",
-		header: "Title",
+		header: ({ column }) => {
+			const isAscending = column.getIsSorted() === "asc";
+			const Icon = isAscending
+				? AiOutlineSortAscending
+				: AiOutlineSortDescending;
+
+			return (
+				<Button
+					className="group"
+					variant="bare"
+					options="noPadding"
+					onClick={() => column.toggleSorting(isAscending)}
+				>
+					Title
+					<Icon className="size-5 ml-1 transition-opacity opacity-0 group-hover:opacity-80" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			const value = row.original.title;
+
+			return value ? <div className="min-w-[7.25rem]">{value}</div> : null;
+		},
 	},
 	{
 		accessorKey: "description",
@@ -66,7 +92,24 @@ export const columns: ColumnDef<JobPosting>[] = [
 	},
 	{
 		accessorKey: "jobBoard",
-		header: "Job Board",
+		header: ({ column }) => {
+			const isAscending = column.getIsSorted() === "asc";
+			const Icon = isAscending
+				? AiOutlineSortAscending
+				: AiOutlineSortDescending;
+
+			return (
+				<Button
+					className="group"
+					variant="bare"
+					options="noPadding"
+					onClick={() => column.toggleSorting(isAscending)}
+				>
+					Job Board
+					<Icon className="size-5 ml-1 transition-opacity opacity-0 group-hover:opacity-80" />
+				</Button>
+			);
+		},
 		cell: ({ row }) => {
 			const value = row.original.jobBoard;
 
@@ -75,7 +118,24 @@ export const columns: ColumnDef<JobPosting>[] = [
 	},
 	{
 		accessorKey: "company",
-		header: "Company",
+		header: ({ column }) => {
+			const isAscending = column.getIsSorted() === "asc";
+			const Icon = isAscending
+				? AiOutlineSortAscending
+				: AiOutlineSortDescending;
+
+			return (
+				<Button
+					className="group"
+					variant="bare"
+					options="noPadding"
+					onClick={() => column.toggleSorting(isAscending)}
+				>
+					Company
+					<Icon className="size-5 ml-1 transition-opacity opacity-0 group-hover:opacity-80" />
+				</Button>
+			);
+		},
 		cell: ({ row }) => {
 			const value = row.original.company;
 
@@ -84,16 +144,35 @@ export const columns: ColumnDef<JobPosting>[] = [
 	},
 	{
 		accessorKey: "location",
-		header: "Location",
+		header: ({ column }) => {
+			const isAscending = column.getIsSorted() === "asc";
+			const Icon = isAscending
+				? AiOutlineSortAscending
+				: AiOutlineSortDescending;
+
+			return (
+				<Button
+					className="group"
+					variant="bare"
+					options="noPadding"
+					onClick={() => column.toggleSorting(isAscending)}
+				>
+					Location
+					<Icon className="size-5 ml-1 transition-opacity opacity-0 group-hover:opacity-80" />
+				</Button>
+			);
+		},
 		cell: ({ row }) => {
 			const value = row.original.location;
 			const isSpecific = !["remote", "hybrid", "in-office"].includes(value);
 			const variant = (isSpecific ? "default" : value) as BadgeProps["variant"];
 
 			return value ? (
-				<Badge variant={variant}>
-					{!isSpecific ? kebabToTitleCase(value) : value}
-				</Badge>
+				<div className="min-w-[11rem]">
+					<Badge variant={variant}>
+						{!isSpecific ? kebabToTitleCase(value) : value}
+					</Badge>
+				</div>
 			) : null;
 		},
 	},
@@ -115,7 +194,24 @@ export const columns: ColumnDef<JobPosting>[] = [
 	},
 	{
 		accessorKey: "status",
-		header: "Status",
+		header: ({ column }) => {
+			const isAscending = column.getIsSorted() === "asc";
+			const Icon = isAscending
+				? AiOutlineSortAscending
+				: AiOutlineSortDescending;
+
+			return (
+				<Button
+					className="group"
+					variant="bare"
+					options="noPadding"
+					onClick={() => column.toggleSorting(isAscending)}
+				>
+					Status
+					<Icon className="size-5 ml-1 transition-opacity opacity-0 group-hover:opacity-80" />
+				</Button>
+			);
+		},
 		cell: ({ row }) => {
 			const value = row.original.status;
 
