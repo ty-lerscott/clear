@@ -96,6 +96,9 @@ const config = {
 				900: "#0A191F",
 				950: "#050D0F",
 			},
+			socials: {
+				linkedin: "#0077B5",
+			},
 		},
 		extend: {
 			colors: {
