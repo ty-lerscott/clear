@@ -13,7 +13,7 @@ const badgeVariants = cva(
 				hybrid: "bg-yellow-200 border-yellow-400 text-yellow-600",
 				"in-office": "bg-red-700 text-red-50",
 				ready: "border-green-500 text-green-500",
-				pending: "border-blue-300 text-blue-300",
+				generating: "border-blue-300 text-blue-300",
 				applied: "bg-blue-100 border-blue-200 text-blue-600",
 				interviewing: "bg-green-100 border-green-200 text-green-600",
 				negotiating: "bg-green-600 border-green-600 text-green-100",
@@ -22,8 +22,12 @@ const badgeVariants = cva(
 				rejected: "bg-red-700 border-red-700 text-red-50",
 				"rejected-myself": "bg-red-200 text-red-700",
 			},
+			centered: {
+				true: "text-center",
+			},
 		},
 		defaultVariants: {
+			centered: false,
 			variant: "linkedin",
 		},
 	},
@@ -33,9 +37,12 @@ export interface BadgeProps
 	extends React.HTMLAttributes<HTMLDivElement>,
 		VariantProps<typeof badgeVariants> {}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({ className, variant, centered, ...props }: BadgeProps) {
 	return (
-		<div className={cn(badgeVariants({ variant }), className)} {...props} />
+		<div
+			className={cn(badgeVariants({ variant, centered }), className)}
+			{...props}
+		/>
 	);
 }
 

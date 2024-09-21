@@ -3,6 +3,7 @@
 import { Badge, type BadgeProps } from "@/ui/badge";
 import { Button } from "@/ui/button";
 import dayjs from "dayjs";
+import { kebabToTitleCase } from "@/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
 	AiOutlineSortAscending,
@@ -23,7 +24,7 @@ export type JobPosting = {
 	location: "in-office" | "remote" | "hybrid" | string;
 	status:
 		| "ready"
-		| "pending"
+		| "generating"
 		| "applied"
 		| "interviewing"
 		| "negotiating"
@@ -33,12 +34,6 @@ export type JobPosting = {
 		| "rejected-myself";
 	lastModified: string;
 };
-
-const kebabToTitleCase = (str: string) =>
-	str
-		.split("-")
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-		.join(" ");
 
 const formatSalary = (amount: number, currency: string) => {
 	const formatter = new Intl.NumberFormat("en-US", {
@@ -168,8 +163,8 @@ export const columns: ColumnDef<JobPosting>[] = [
 			const variant = (isSpecific ? "default" : value) as BadgeProps["variant"];
 
 			return value ? (
-				<div className="min-w-[11rem]">
-					<Badge variant={variant}>
+				<div className="min-w-[7.25rem]">
+					<Badge variant={variant} centered>
 						{!isSpecific ? kebabToTitleCase(value) : value}
 					</Badge>
 				</div>
@@ -215,6 +210,10 @@ export const columns: ColumnDef<JobPosting>[] = [
 		cell: ({ row }) => {
 			const value = row.original.status;
 
+			/**
+			 * TODO: Add Flow from Ready -> Generate -> Generating -> Generated
+			 * With alert dialogs to confirm cover letter generation
+			 */
 			return value ? (
 				<div className="min-w-[7.25rem]">
 					<Badge variant={value}>{kebabToTitleCase(value)}</Badge>
