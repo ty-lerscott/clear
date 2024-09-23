@@ -1,9 +1,10 @@
-import { type JobPosting, columns } from "./columns";
-import { DataTable } from "./data-table";
 import { faker } from "@faker-js/faker";
-import { Card } from "@/ui/card";
-import { kebabToTitleCase, cn } from "@/utils";
 import { PiWaveSawtoothBold } from "react-icons/pi";
+
+import Client from "./client";
+import { Card } from "@/ui/card";
+import type { JobPosting } from "./columns";
+import { kebabToTitleCase, cn } from "@/utils";
 
 const statuses = [
 	"ready",
@@ -14,7 +15,7 @@ const statuses = [
 	"got-the-job",
 	"no-answer",
 	"rejected",
-	"rejected-myself",
+	"withdrew",
 ];
 
 const randomStatus = () => faker.helpers.arrayElement(statuses);
@@ -45,16 +46,13 @@ const Page = () => {
 
 	return (
 		<div>
-			<div className="grid grid-cols-[repeat(24,_minmax(0,_1fr))] gap-4 mb-4">
+			<div className="grid grid-cols-[repeat(29,_minmax(0,_1fr))] gap-4">
 				{statuses
 					.filter(
 						(status) =>
-							![
-								"generating",
-								"no-answer",
-								"rejected",
-								"rejected-myself",
-							].includes(status),
+							!["generating", "no-answer", "rejected", "withdrew"].includes(
+								status,
+							),
 					)
 					.map((status) => {
 						const count = data.filter((job) => job.status === status).length;
@@ -62,7 +60,7 @@ const Page = () => {
 						return (
 							<Card
 								className={cn(
-									"flex flex-col col-span-3 items-center justify-center py-2",
+									"flex flex-col col-span-4 items-center justify-center py-2",
 									count
 										? "border-primary text-primary"
 										: "border-muted text-muted",
@@ -103,7 +101,8 @@ const Page = () => {
 						);
 					})}
 			</div>
-			<DataTable columns={columns} data={data} />
+
+			<Client data={data} />
 		</div>
 	);
 };

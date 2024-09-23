@@ -21,7 +21,7 @@ export default async function RootLayout({
 	children: ReactNode;
 }) {
 	return (
-		<div className="flex">
+		<div className="flex h-screen overflow-y-hidden">
 			<div className="flex flex-col justify-between w-[18rem] h-screen p-4 bg-gradient-to-b from-primary to-shift border-r border-r-shift">
 				<div>
 					<h1 className="text-white text-center text-lg">

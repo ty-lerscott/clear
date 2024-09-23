@@ -20,7 +20,7 @@ const badgeVariants = cva(
 				"got-the-job": "bg-green-800 border-green-800  text-green-50",
 				"no-answer": "bg-gray-200 text-gray-500",
 				rejected: "bg-red-700 border-red-700 text-red-50",
-				"rejected-myself": "bg-red-200 text-red-700",
+				withdrew: "bg-red-200 text-red-700",
 			},
 			centered: {
 				true: "text-center",

@@ -9,6 +9,7 @@ import {
 	AiOutlineSortAscending,
 	AiOutlineSortDescending,
 } from "react-icons/ai";
+import { SlOptionsVertical } from "react-icons/sl";
 
 export type JobPosting = {
 	id: string;
@@ -31,7 +32,7 @@ export type JobPosting = {
 		| "got-the-job"
 		| "no-answer"
 		| "rejected"
-		| "rejected-myself";
+		| "withdrew";
 	lastModified: string;
 };
 
@@ -69,20 +70,6 @@ export const columns: ColumnDef<JobPosting>[] = [
 			const value = row.original.title;
 
 			return value ? <div className="min-w-[7.25rem]">{value}</div> : null;
-		},
-	},
-	{
-		accessorKey: "description",
-		header: "Description",
-		cell: ({ row }) => {
-			const handleExpandDialog = () => {
-				console.log("expanding the dialog box for this description");
-			};
-			return (
-				<Button variant="outline" size="xs" onClick={handleExpandDialog}>
-					Expand
-				</Button>
-			);
 		},
 	},
 	{
@@ -229,6 +216,17 @@ export const columns: ColumnDef<JobPosting>[] = [
 				<div className="min-w-[11.25rem]">
 					{dayjs(row.original.lastModified).format("ddd MMM DD HH:mm A")}
 				</div>
+			);
+		},
+	},
+	{
+		accessorKey: "options",
+		header: "",
+		cell: ({ row }) => {
+			return (
+				<Button variant="bare">
+					<SlOptionsVertical className="text-muted size-4 transition-colors hover:text-primary" />
+				</Button>
 			);
 		},
 	},
