@@ -4,7 +4,7 @@ import { Badge, type BadgeProps } from "@/ui/badge";
 import { Button } from "@/ui/button";
 import dayjs from "dayjs";
 import { kebabToTitleCase } from "@/utils";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { Row, Column } from "@tanstack/react-table";
 import {
 	AiOutlineSortAscending,
 	AiOutlineSortDescending,
@@ -45,10 +45,10 @@ const formatSalary = (amount: number, currency: string) => {
 	return formatter.format(amount);
 };
 
-export const columns: ColumnDef<JobPosting>[] = [
+export const columns = [
 	{
 		accessorKey: "title",
-		header: ({ column }) => {
+		header: ({ column }: { column: Column<JobPosting, unknown> }) => {
 			const isAscending = column.getIsSorted() === "asc";
 			const Icon = isAscending
 				? AiOutlineSortAscending
@@ -66,7 +66,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 				</Button>
 			);
 		},
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<JobPosting> }) => {
 			const value = row.original.title;
 
 			return value ? <div className="min-w-[7.25rem]">{value}</div> : null;
@@ -74,7 +74,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 	},
 	{
 		accessorKey: "jobBoard",
-		header: ({ column }) => {
+		header: ({ column }: { column: Column<JobPosting, unknown> }) => {
 			const isAscending = column.getIsSorted() === "asc";
 			const Icon = isAscending
 				? AiOutlineSortAscending
@@ -92,7 +92,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 				</Button>
 			);
 		},
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<JobPosting> }) => {
 			const value = row.original.jobBoard;
 
 			return value ? <Badge variant={value}>{value}</Badge> : null;
@@ -100,7 +100,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 	},
 	{
 		accessorKey: "company",
-		header: ({ column }) => {
+		header: ({ column }: { column: Column<JobPosting, unknown> }) => {
 			const isAscending = column.getIsSorted() === "asc";
 			const Icon = isAscending
 				? AiOutlineSortAscending
@@ -118,7 +118,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 				</Button>
 			);
 		},
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<JobPosting> }) => {
 			const value = row.original.company;
 
 			return value ? <div className="min-w-[7.25rem]">{value}</div> : null;
@@ -126,7 +126,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 	},
 	{
 		accessorKey: "location",
-		header: ({ column }) => {
+		header: ({ column }: { column: Column<JobPosting, unknown> }) => {
 			const isAscending = column.getIsSorted() === "asc";
 			const Icon = isAscending
 				? AiOutlineSortAscending
@@ -144,7 +144,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 				</Button>
 			);
 		},
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<JobPosting> }) => {
 			const value = row.original.location;
 			const isSpecific = !["remote", "hybrid", "in-office"].includes(value);
 			const variant = (isSpecific ? "default" : value) as BadgeProps["variant"];
@@ -161,7 +161,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 	{
 		accessorKey: "salary",
 		header: "Salary",
-		cell: ({ row: { original } }) => {
+		cell: ({ row: { original } }: { row: Row<JobPosting> }) => {
 			const { min, max, currency } = original?.salary ?? {};
 
 			const minSalary = min ? formatSalary(min, currency) : null;
@@ -176,7 +176,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 	},
 	{
 		accessorKey: "status",
-		header: ({ column }) => {
+		header: ({ column }: { column: Column<JobPosting, unknown> }) => {
 			const isAscending = column.getIsSorted() === "asc";
 			const Icon = isAscending
 				? AiOutlineSortAscending
@@ -194,8 +194,8 @@ export const columns: ColumnDef<JobPosting>[] = [
 				</Button>
 			);
 		},
-		cell: ({ row }) => {
-			const value = row.original.status;
+		cell: ({ row: { original } }: { row: Row<JobPosting> }) => {
+			const value = original.status;
 
 			/**
 			 * TODO: Add Flow from Ready -> Generate -> Generating -> Generated
@@ -211,7 +211,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 	{
 		accessorKey: "lastModified",
 		header: "Last Modified",
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<JobPosting> }) => {
 			return (
 				<div className="min-w-[11.25rem]">
 					{dayjs(row.original.lastModified).format("ddd MMM DD HH:mm A")}
@@ -222,7 +222,7 @@ export const columns: ColumnDef<JobPosting>[] = [
 	{
 		accessorKey: "options",
 		header: "",
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<JobPosting> }) => {
 			return (
 				<Button variant="bare">
 					<SlOptionsVertical className="text-muted size-4 transition-colors hover:text-primary" />
