@@ -22,7 +22,7 @@ const defaultColumns = {
 
 const Client = ({ data }: { data: JobPosting[] }) => {
 	const [search, setSearch] = useState("");
-
+	const [filteredData, setFilteredData] = useState(data);
 	const [activeColumns, setActiveColumns] = useState<{ [k: string]: boolean }>(
 		defaultColumns,
 	);
@@ -38,7 +38,13 @@ const Client = ({ data }: { data: JobPosting[] }) => {
 		<>
 			<div className="my-4 grid gap-4 grid-cols-[repeat(29,_minmax(0,_1fr))]">
 				<div className="col-span-12" />
-				<Search className="col-span-9" search={search} setSearch={setSearch} />
+				<Search
+					data={data}
+					search={search}
+					setSearch={setSearch}
+					className="col-span-9"
+					setData={setFilteredData}
+				/>
 
 				<Popover>
 					<PopoverTrigger
@@ -77,7 +83,7 @@ const Client = ({ data }: { data: JobPosting[] }) => {
 						column.accessorKey === "options"
 					);
 				})}
-				data={data}
+				data={filteredData}
 			/>
 		</>
 	);

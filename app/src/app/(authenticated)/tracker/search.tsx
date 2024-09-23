@@ -2,19 +2,30 @@ import Input from "@/ui/input";
 import { cn } from "@/utils";
 import debounce from "lodash.debounce";
 import { IoSearch } from "react-icons/io5";
+import { matchSorter } from "match-sorter";
+import type { JobPosting } from "./columns";
 
 const Search = ({
+	data,
 	search,
+	setData,
 	setSearch,
 	className,
 }: {
 	search: string;
-	setSearch: (search: string) => void;
 	className?: string;
+	data: JobPosting[];
+	setSearch: (search: string) => void;
+	setData: (search: JobPosting[]) => void;
 }) => {
-	const handleSearch = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(e.target.value);
-	}, 250);
+		setData(
+			matchSorter(data, e.target.value, {
+				keys: ["title", "jobBoard", "company", "location", "status"],
+			}),
+		);
+	};
 
 	return (
 		<div className={cn("relative h-10", className)}>
