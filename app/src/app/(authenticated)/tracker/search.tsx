@@ -1,6 +1,5 @@
 import Input from "@/ui/input";
 import { cn } from "@/utils";
-import debounce from "lodash.debounce";
 import { IoSearch } from "react-icons/io5";
 import { matchSorter } from "match-sorter";
 import type { JobPosting } from "./columns";

@@ -223,6 +223,13 @@ export const columns = [
 		accessorKey: "options",
 		header: "",
 		cell: ({ row }: { row: Row<JobPosting> }) => {
+			/**
+			 * TODO: Generate a cover letter
+			 * TODO: View the job description
+			 * TODO: Edit the job posting
+			 * TODO: Delete the job posting
+			 * TODO: View the job posting
+			 */
 			return (
 				<Button variant="bare">
 					<SlOptionsVertical className="text-muted size-4 transition-colors hover:text-primary" />

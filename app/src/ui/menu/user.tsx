@@ -62,6 +62,7 @@ const UserMenuItem = () => {
 					<DropdownMenuItem onSelect={() => setIsProfileDialogOpen(true)}>
 						Profile
 					</DropdownMenuItem>
+					{/* TODO: psych profile page */}
 					<DropdownMenuSeparator className="bg-accent" />
 					<DropdownMenuItem onSelect={handleSignOut}>Sign Out</DropdownMenuItem>
 				</DropdownMenuContent>
