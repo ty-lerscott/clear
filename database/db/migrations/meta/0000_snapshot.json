@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "8d9fe1a3-83fa-4efc-b644-b137f91d09b8",
+  "id": "ae36368a-1b5a-446c-bfa3-ec8cdf30d99a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "applications": {
@@ -96,14 +96,14 @@
           "name": "website",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "location": {
           "name": "location",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         }
       },
@@ -143,25 +143,18 @@
           "notNull": false,
           "autoincrement": false
         },
-        "mainContact": {
-          "name": "mainContact",
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "description": {
-          "name": "description",
+        "jobBoard": {
+          "name": "jobBoard",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "job_board": {
-          "name": "job_board",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "status": {
@@ -257,27 +250,6 @@
           "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": false
-        },
-        "first_name": {
-          "name": "first_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "last_name": {
-          "name": "last_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "emailAddress": {
-          "name": "emailAddress",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         }
       },

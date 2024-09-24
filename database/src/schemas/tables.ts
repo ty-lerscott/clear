@@ -2,19 +2,16 @@ import { createId } from "@paralleldrive/cuid2";
 import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
 
 // Users Table
-export const Users = sqliteTable("user", {
+export const Users = sqliteTable("users", {
 	id: text("id").primaryKey().$defaultFn(createId),
-	firstName: text("firstName"),
-	lastName: text("lastName"),
-	emailAddress: text("emailAddress"),
 });
 
 // Companies Table
 export const Companies = sqliteTable("companies", {
 	id: text("id").primaryKey().$defaultFn(createId),
 	name: text("name").notNull(),
-	website: text("website").notNull(),
-	location: text("location").notNull(),
+	website: text("website"),
+	location: text("location"),
 });
 
 // JobPostings Table
@@ -28,12 +25,8 @@ export const JobPostings = sqliteTable("postings", {
 		min: number;
 		max: number;
 	}>(),
-	mainContact: text("mainContact", { mode: "json" }).$type<{
-		name: string;
-		email: string;
-	}>(),
-	description: text("description").notNull(),
-	jobBoard: text("jobBoard").notNull(),
+	description: text("description"),
+	jobBoard: text("jobBoard"),
 	status: text("status"),
 });
 
@@ -67,7 +60,7 @@ export const StatusHistory = sqliteTable("statusHistory", {
 			"landed-job",
 			"no-response",
 			"rejected",
-			"rejected-myself",
+			"withdrew",
 		],
 	}).notNull(),
 	modificationDate: text("modificationDate").notNull(),

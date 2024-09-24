@@ -9,8 +9,11 @@ const IS_LOCAL = env.NODE_ENV !== "production";
 // TODO: This guard should take methods into account.
 const guardRoute = async <T extends Record<string, unknown>>(
 	req: CustomRequest,
-	cb: (userId: string, body?: Record<string, unknown>) => Promise<Response<T>>,
-): Promise<Response<T>> => {
+	cb: (
+		userId: string,
+		body: Record<string, unknown>,
+	) => Promise<Response<T> | Response>,
+): Promise<Response<T> | Response> => {
 	const userId = req.headers["x-user-id"] as string | undefined;
 	const token = req.headers.authorization as string | undefined;
 

@@ -1,9 +1,44 @@
 import type { User } from "@repo/types/user";
 import type { Response } from "@repo/types/api";
 import { clerkClient } from "@clerk/clerk-sdk-node";
+import dbClient from "@repo/database/src/client";
+import { tables } from "@repo/database/src/schemas";
+import { eq } from "drizzle-orm";
 import { NOT_FOUND, OK, SERVER_ERROR } from "@repo/config/src/status-codes";
 
 const user = {
+	createUser: async (id: string): Promise<Response> => {
+		try {
+			console.log("creating user");
+			await dbClient.insert(tables.Users).values({ id }).execute();
+
+			return {
+				status: OK,
+			};
+		} catch (err) {
+			return {
+				error: (err as Error).message,
+				status: SERVER_ERROR,
+			};
+		}
+	},
+	deleteUser: async (id: string): Promise<Response> => {
+		try {
+			await dbClient
+				.delete(tables.Users)
+				.where(eq(tables.Users.id, id))
+				.execute();
+
+			return {
+				status: OK,
+			};
+		} catch (err) {
+			return {
+				error: (err as Error).message,
+				status: SERVER_ERROR,
+			};
+		}
+	},
 	fetchUser: async (userId: string): Promise<Response<User>> => {
 		try {
 			const user = await clerkClient.users.getUser(userId);
@@ -40,7 +75,7 @@ const user = {
 	},
 	updateUser: async (
 		userId: string,
-		user: Record<string, unknown>,
+		body: Record<string, unknown>,
 	): Promise<Response> => {
 		try {
 			const clerkUser = await clerkClient.users.getUser(userId);
@@ -52,7 +87,7 @@ const user = {
 				};
 			}
 
-			await clerkClient.users.updateUser(userId, user);
+			await clerkClient.users.updateUser(userId, body);
 
 			return {
 				status: OK,

@@ -11,7 +11,7 @@ const DrizzleConfig = {
 	schema: `${resolve(cwd, "src", "schemas")}/*`,
 	out: resolve(cwd, "db", "migrations"),
 	dbCredentials: {
-		url: `http://localhost:${env.PORT}`,
+		url: `http://localhost:${env.DB_PORT}`,
 		authToken: env.TURSO_AUTH_TOKEN,
 	},
 } satisfies Config;

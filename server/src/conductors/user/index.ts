@@ -25,9 +25,7 @@ const UserConductor = async ({ req, res, next }: Conductor) => {
 				UserOrchestrator.fetchUser,
 			);
 
-			console.log({ data });
-
-			res.status(status).json({ ...data, error });
+			res.status(status).json({ data, error });
 		}
 	}
 

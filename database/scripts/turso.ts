@@ -3,7 +3,7 @@ import { exec } from "node:child_process";
 import { resolve } from "node:path";
 
 const env = config().parsed || {};
-const PORT = Number(env.PORT) || 8080;
+const PORT = Number(env.DB_PORT) || 8080;
 
 const dbFile = resolve(process.cwd(), "db", "fog.db");
 

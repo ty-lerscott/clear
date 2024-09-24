@@ -5,7 +5,7 @@ import {
 	JobPostings,
 	StatusHistory,
 	Users,
-} from "@/schemas/tables";
+} from "./tables";
 
 export const companiesRelations = relations(Companies, ({ many }) => ({
 	jobPostings: many(JobPostings),

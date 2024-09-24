@@ -11,8 +11,8 @@ CREATE TABLE `applications` (
 CREATE TABLE `companies` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
-	`website` text NOT NULL,
-	`location` text NOT NULL
+	`website` text,
+	`location` text
 );
 --> statement-breakpoint
 CREATE TABLE `postings` (
@@ -20,9 +20,8 @@ CREATE TABLE `postings` (
 	`companyId` text NOT NULL,
 	`title` text NOT NULL,
 	`salary` text,
-	`mainContact` text,
-	`description` text NOT NULL,
-	`job_board` text NOT NULL,
+	`description` text,
+	`jobBoard` text,
 	`status` text,
 	FOREIGN KEY (`companyId`) REFERENCES `companies`(`id`) ON UPDATE no action ON DELETE cascade
 );
@@ -37,8 +36,5 @@ CREATE TABLE `statusHistory` (
 );
 --> statement-breakpoint
 CREATE TABLE `users` (
-	`id` text PRIMARY KEY NOT NULL,
-	`first_name` text,
-	`last_name` text,
-	`emailAddress` text
+	`id` text PRIMARY KEY NOT NULL
 );

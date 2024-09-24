@@ -36,10 +36,10 @@
 			"persistent": true
 		},
 		"https": {
-			"dependsOn": ["^dev"]
+			"cache": false
 		},
 		"start:studio": {
-			"dependsOn": ["^dev"]
+			"cache": false
 		}
 	}
 }
