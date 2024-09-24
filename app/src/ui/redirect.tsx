@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-const Redirect = ({ to = "/dashboard" }: { to?: string }) => {
+const Redirect = ({ to = "/overview" }: { to?: string }) => {
 	const { isSignedIn } = useUser();
 
 	useEffect(() => {

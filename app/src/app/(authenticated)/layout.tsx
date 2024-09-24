@@ -42,12 +42,12 @@ export default async function RootLayout({
 						<GrList className="size-5" />
 					</MenuLink>
 
-					<MenuLink href="/billing" title="Billing">
-						<TbReceiptDollar className="size-5" />
-					</MenuLink>
-
 					<MenuLink href="/cover-letters" title="Cover Letters">
 						<GrDocumentPdf className="size-5" />
+					</MenuLink>
+
+					<MenuLink href="/billing" title="Billing">
+						<TbReceiptDollar className="size-5" />
 					</MenuLink>
 				</div>
 

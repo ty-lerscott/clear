@@ -1,15 +1,18 @@
 "use client";
 
-import { Badge, type BadgeProps } from "@/ui/badge";
-import { Button } from "@/ui/button";
 import dayjs from "dayjs";
-import { kebabToTitleCase } from "@/utils";
+import { SlOptionsVertical } from "react-icons/sl";
 import type { Row, Column } from "@tanstack/react-table";
 import {
 	AiOutlineSortAscending,
 	AiOutlineSortDescending,
 } from "react-icons/ai";
-import { SlOptionsVertical } from "react-icons/sl";
+
+import { Button } from "@/ui/button";
+import Separator from "@/ui/separator";
+import { kebabToTitleCase } from "@/utils";
+import { Badge, type BadgeProps } from "@/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
 
 export type JobPosting = {
 	id: string;
@@ -231,9 +234,47 @@ export const columns = [
 			 * TODO: View the job posting
 			 */
 			return (
-				<Button variant="bare">
-					<SlOptionsVertical className="text-muted size-4 transition-colors hover:text-primary" />
-				</Button>
+				<Popover>
+					<PopoverTrigger>
+						<SlOptionsVertical className="text-muted size-4 transition-colors hover:text-primary" />
+					</PopoverTrigger>
+					<PopoverContent>
+						<ul className="list-none">
+							<li>
+								<Button variant="bare" disabled>
+									Edit Posting
+								</Button>
+							</li>
+							<li>
+								<Button variant="bare" disabled>
+									Expand Posting
+								</Button>
+							</li>
+							<li>
+								<Button variant="bare" disabled>
+									View Job Description
+								</Button>
+							</li>
+							<li>
+								<Button variant="bare" disabled>
+									Generate Cover Letter
+								</Button>
+							</li>
+							<li>
+								<Separator />
+							</li>
+							<li>
+								<Button
+									variant="bare"
+									className="text-red-600 hover:text-red-400 pb-0"
+									disabled
+								>
+									Delete Posting
+								</Button>
+							</li>
+						</ul>
+					</PopoverContent>
+				</Popover>
 			);
 		},
 	},
