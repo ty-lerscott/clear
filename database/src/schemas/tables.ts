@@ -24,30 +24,21 @@ export const JobPostings = sqliteTable("postings", {
 	salary: text("salary", { mode: "json" }).$type<{
 		min: number;
 		max: number;
+		currency: string;
 	}>(),
 	description: text("description"),
 	jobBoard: text("jobBoard"),
 	status: text("status"),
-});
-
-// Applications Table
-export const Applications = sqliteTable("applications", {
-	id: text("id").primaryKey().$defaultFn(createId),
 	userId: text("userId")
 		.references(() => Users.id, { onDelete: "cascade" })
 		.notNull(),
-	postingId: integer("postingId")
-		.references(() => JobPostings.id, { onDelete: "cascade" })
-		.notNull(),
-	applicationDate: text("applicationDate"),
-	outcome: text("outcome"),
 });
 
 // StatusHistory Table
 export const StatusHistory = sqliteTable("statusHistory", {
 	id: text("id").primaryKey().$defaultFn(createId),
-	applicationId: integer("applicationId")
-		.references(() => Applications.id, { onDelete: "cascade" })
+	postingId: integer("postingId")
+		.references(() => JobPostings.id, { onDelete: "cascade" })
 		.notNull(),
 	status: text("status", {
 		enum: [

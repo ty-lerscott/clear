@@ -1,80 +1,9 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "ae36368a-1b5a-446c-bfa3-ec8cdf30d99a",
+  "id": "9ee87176-41ef-4760-8a59-2d0f6261685d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "applications": {
-      "name": "applications",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "postingId": {
-          "name": "postingId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "applicationDate": {
-          "name": "applicationDate",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "outcome": {
-          "name": "outcome",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "applications_userId_users_id_fk": {
-          "name": "applications_userId_users_id_fk",
-          "tableFrom": "applications",
-          "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "applications_postingId_postings_id_fk": {
-          "name": "applications_postingId_postings_id_fk",
-          "tableFrom": "applications",
-          "tableTo": "postings",
-          "columnsFrom": [
-            "postingId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "companies": {
       "name": "companies",
       "columns": {
@@ -163,6 +92,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -173,6 +109,19 @@
           "tableTo": "companies",
           "columnsFrom": [
             "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "postings_userId_users_id_fk": {
+          "name": "postings_userId_users_id_fk",
+          "tableFrom": "postings",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -194,8 +143,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "applicationId": {
-          "name": "applicationId",
+        "postingId": {
+          "name": "postingId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -225,12 +174,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "statusHistory_applicationId_applications_id_fk": {
-          "name": "statusHistory_applicationId_applications_id_fk",
+        "statusHistory_postingId_postings_id_fk": {
+          "name": "statusHistory_postingId_postings_id_fk",
           "tableFrom": "statusHistory",
-          "tableTo": "applications",
+          "tableTo": "postings",
           "columnsFrom": [
-            "applicationId"
+            "postingId"
           ],
           "columnsTo": [
             "id"
