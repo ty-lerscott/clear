@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { faker } from "@faker-js/faker";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { PiWaveSawtoothBold } from "react-icons/pi";
 
@@ -48,31 +48,27 @@ const defaultColumns = {
 	lastModified: true,
 };
 
-const data = Array.from({ length: 10 }, () => ({
-	id: faker.string.uuid(),
-	title: faker.person.jobTitle(),
-	company: {
-		id: faker.string.uuid(),
-		location: randomLocation(),
-		name: faker.company.name(),
-		website: faker.helpers.arrayElement([faker.internet.url(), undefined]),
-	},
-	jobBoard: faker.helpers.arrayElement(["linkedin", ""]),
-	salary: {
-		min: faker.number.int({ min: 20000, max: 150000 }),
-		max: faker.number.int({ min: 150000, max: 250000 }),
-		currency: "USD",
-	},
-	status: randomStatus(),
-	lastModified: faker.date.recent().toISOString(),
-})) as JobPosting[];
-
 const Client = () => {
 	const [search, setSearch] = useState("");
-	const [filteredData, setFilteredData] = useState<JobPosting[]>(data);
+	const [filteredData, setFilteredData] = useState<JobPosting[]>([]);
 	const [activeColumns, setActiveColumns] = useState<{ [k: string]: boolean }>(
 		defaultColumns,
 	);
+
+	const { isLoading, data: postings } = useQuery({
+		queryKey: ["fetchPostings"],
+		queryFn: useApi<JobPosting[]>("/postings", {
+			method: "POST",
+		}),
+	});
+
+	console.log(postings);
+
+	useEffect(() => {
+		if (!isLoading && Array.isArray(postings)) {
+			setFilteredData(postings);
+		}
+	}, [postings, isLoading]);
 
 	const handleToggleColumn = (columnName: string) => (isChecked: boolean) => {
 		setActiveColumns((prevState) => ({
@@ -81,16 +77,7 @@ const Client = () => {
 		}));
 	};
 
-	const { isLoading, data: postings } = useQuery({
-		queryKey: ["fetchPostings"],
-		queryFn: useApi<JobPosting>("/postings", {
-			method: "POST",
-		}),
-	});
-
-	console.log({ postings });
-
-	return (
+	return isLoading || !postings ? null : (
 		<>
 			<div className="grid grid-cols-[repeat(29,_minmax(0,_1fr))] gap-4">
 				{statuses
@@ -101,7 +88,9 @@ const Client = () => {
 							),
 					)
 					.map((status) => {
-						const count = data.filter((job) => job.status === status).length;
+						const count = postings.filter(
+							(job) => job.status === status,
+						).length;
 
 						return (
 							<Card
@@ -127,7 +116,9 @@ const Client = () => {
 				{statuses
 					.filter((status) => ["no-answer", "rejected"].includes(status))
 					.map((status) => {
-						const count = data.filter((job) => job.status === status).length;
+						const count = postings.filter(
+							(job) => job.status === status,
+						).length;
 
 						return (
 							<Card
@@ -150,13 +141,13 @@ const Client = () => {
 
 			<div className="my-4 grid gap-4 grid-cols-[repeat(29,_minmax(0,_1fr))]">
 				<div className="col-span-12" />
-				{/* <Search
-					data={data}
+				<Search
+					data={postings}
 					search={search}
 					setSearch={setSearch}
 					className="col-span-9"
 					setData={setFilteredData}
-				/> */}
+				/>
 
 				<Popover>
 					<PopoverTrigger

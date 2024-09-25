@@ -13,7 +13,7 @@ import { Button } from "@/ui/button";
 import Separator from "@/ui/separator";
 import { kebabToTitleCase } from "@/utils";
 import { Badge, type BadgeProps } from "@/ui/badge";
-import type { JobPosting } from "@repo/types/job-posting";
+import type { JobPosting, JobBoard } from "@repo/types/job-posting";
 import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
 
 const formatSalary = (amount: number, currency: string) => {
@@ -73,9 +73,23 @@ export const columns = [
 			);
 		},
 		cell: ({ row }: { row: Row<JobPosting> }) => {
-			const value = row.original.jobBoard;
+			const { name, url } = row.original.jobBoard as JobBoard;
 
-			return value ? <Badge variant={value}>{value}</Badge> : undefined;
+			return name ? (
+				<Badge variant={name as BadgeProps["variant"]}>
+					{url ? (
+						<Link
+							href={url}
+							target="_blank"
+							className="underline hover:no-underline"
+						>
+							{name}
+						</Link>
+					) : (
+						name
+					)}
+				</Badge>
+			) : undefined;
 		},
 	},
 	{
@@ -105,7 +119,11 @@ export const columns = [
 
 			return company?.name ? (
 				company.website ? (
-					<Link href={company.website} className="underline" target="_blank">
+					<Link
+						href={company.website}
+						className="underline hover:no-underline"
+						target="_blank"
+					>
 						<span className="min-w-[7.25rem]">{company.name}</span>
 					</Link>
 				) : (
@@ -163,7 +181,7 @@ export const columns = [
 
 			return (
 				<div className="min-w-[11.5rem]">
-					<span>{`${minSalary}${max ? ` - ${maxSalary}` : ""}`}</span>
+					<span>{`${min ? minSalary : ""}${max ? ` - ${maxSalary}` : ""}`}</span>
 				</div>
 			);
 		},
@@ -208,7 +226,7 @@ export const columns = [
 		cell: ({ row }: { row: Row<JobPosting> }) => {
 			return (
 				<div className="min-w-[11.25rem]">
-					{dayjs(row.original.lastModified).format("ddd MMM DD HH:mm A")}
+					{dayjs(row.original.date).format("ddd MMM DD hh:mm A")}
 				</div>
 			);
 		},

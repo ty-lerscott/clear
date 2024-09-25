@@ -1,22 +1,26 @@
+export type Salary = {
+	min: number;
+	max: number;
+	currency: string;
+};
+
+export type JobBoard = {
+	name: string;
+	url: string;
+};
+
 export type Company = {
 	id: string;
 	name: string;
 	website?: string;
-	location?: string;
+	location?: "in-office" | "remote" | "hybrid" | string;
 };
 
 export type RequiredJobPosting = {
 	id: string;
 	title: string;
-	salary: {
-		min: number;
-		max: number;
-		currency: string;
-	};
-	company: Company;
 	description: string;
-	jobBoard: "linkedin";
-	location: "in-office" | "remote" | "hybrid" | string;
+	salary: Salary;
 	status:
 		| "ready"
 		| "generating"
@@ -27,7 +31,9 @@ export type RequiredJobPosting = {
 		| "no-answer"
 		| "rejected"
 		| "withdrew";
-	lastModified: string;
+	company: Company;
+	jobBoard: JobBoard;
+	date: string;
 };
 
 export type JobPosting = Partial<RequiredJobPosting>;

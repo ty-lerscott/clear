@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, asc, desc } from "drizzle-orm";
 
 import omit from "object.omit";
 import merge from "lodash.mergewith";
@@ -17,15 +17,30 @@ const jobPostingsOrchestrator = {
 				.where(eq(tables.JobPostings.userId, userId))
 				.execute();
 
-			const companies = await dbClient
-				.select()
-				.from(tables.Companies)
-				.where(
-					inArray(
-						tables.Companies.id,
-						postings.map(({ companyId }) => companyId),
-					),
-				);
+			const [statuses, companies] = await Promise.all([
+				dbClient
+					.select()
+					.from(tables.StatusHistory)
+					.where(
+						inArray(
+							tables.StatusHistory.postingId,
+							postings.map(({ id }) => id),
+						),
+					)
+					.orderBy(desc(tables.StatusHistory.date))
+					.limit(1)
+					.execute(),
+				dbClient
+					.select()
+					.from(tables.Companies)
+					.where(
+						inArray(
+							tables.Companies.id,
+							postings.map(({ companyId }) => companyId),
+						),
+					)
+					.execute(),
+			]);
 
 			const jobPostings = postings.map((posting) => {
 				return merge({}, omit(posting, ["companyId", "userId"]), {
@@ -34,6 +49,12 @@ const jobPostingsOrchestrator = {
 							(company) => company.id === posting.companyId,
 						) as Record<string, unknown>,
 						["id"],
+					),
+					...omit(
+						statuses.find(
+							(status) => status.postingId === posting.id,
+						) as Record<string, unknown>,
+						["postingId", "notes", "id"],
 					),
 				});
 			}) as JobPosting[];

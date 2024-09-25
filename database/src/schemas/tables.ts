@@ -31,7 +31,6 @@ export const JobPostings = sqliteTable("postings", {
 		name: string;
 		url?: string;
 	}>(),
-	status: text("status"),
 	userId: text("userId")
 		.references(() => Users.id, { onDelete: "cascade" })
 		.notNull(),

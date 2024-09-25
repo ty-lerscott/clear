@@ -19,6 +19,10 @@ type ApiOptions = {
 	method?: Methods;
 	body?: Record<string, unknown>;
 	headers?: Record<string, string | undefined>;
+	callbacks?: {
+		onSuccess?: (data: unknown) => void;
+		onError?: (error: Error) => void;
+	};
 };
 
 const ApiContext = createContext<{
@@ -69,7 +73,10 @@ const ApiProvider = ({ children }: { children: ReactNode }) => {
 };
 
 const getInstance =
-	<T extends Record<string, unknown>>(path: string, options: ApiOptions) =>
+	<T extends Record<string, unknown> | Record<string, unknown>[]>(
+		path: string,
+		{ callbacks, ...options }: ApiOptions,
+	) =>
 	async (body?: Record<string, unknown>) => {
 		try {
 			return fetch(
@@ -79,13 +86,22 @@ const getInstance =
 					options,
 					body ? { body: JSON.stringify(body) } : {},
 				) as RequestInit,
-			).then((res) => res.json() as Promise<T>);
+			)
+				.then((res) => res.json() as Promise<T>)
+				.then((data) => {
+					callbacks?.onSuccess?.(data);
+
+					return data;
+				})
+				.catch((err) => {
+					callbacks?.onError?.(err);
+				});
 		} catch (err) {
 			toast.error((err as Error).message);
 		}
 	};
 
-const useApi = <T extends Record<string, unknown>>(
+const useApi = <T extends Record<string, unknown> | Record<string, unknown>[]>(
 	path: string,
 	options?: ApiOptions,
 ) => {

@@ -1,6 +1,8 @@
-import Client from "./client";
+import dynamic from "next/dynamic";
+
+const ClientOnly = dynamic(() => import("./client"), { ssr: false });
 
 const Page = () => {
-	return <Client />;
+	return <ClientOnly />;
 };
 export default Page;
