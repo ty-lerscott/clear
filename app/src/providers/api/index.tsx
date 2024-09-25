@@ -18,12 +18,12 @@ type Methods = "GET" | "POST" | "OPTIONS" | "PUT" | "DELETE";
 type ApiOptions = {
 	method?: Methods;
 	body?: Record<string, unknown>;
-	headers?: Record<string, string | null | undefined>;
+	headers?: Record<string, string | undefined>;
 };
 
 const ApiContext = createContext<{
 	method: Methods;
-	headers: Record<string, string | null | undefined>;
+	headers: Record<string, string | undefined>;
 }>({
 	method: "POST",
 	headers: {
@@ -33,7 +33,7 @@ const ApiContext = createContext<{
 });
 
 const ApiProvider = ({ children }: { children: ReactNode }) => {
-	const [token, setToken] = useState<string | null>(null);
+	const [token, setToken] = useState<string | undefined>();
 	const [userId, setUserId] = useState<string | undefined>();
 	const { getToken, ...rest } = useAuth();
 	const { user } = useUser();

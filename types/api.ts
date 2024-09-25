@@ -4,7 +4,7 @@ import type {
 	NextFunction,
 } from "express";
 
-export type Primitives = string | number | boolean | null | undefined | Buffer; // is Buffer a primitive? no, but...ignore that
+export type Primitives = string | number | boolean | undefined | Buffer; // is Buffer a primitive? no, but...ignore that
 export type PrimitiveObject = Record<string, Primitives | Primitives[]>;
 export type HTTP_METHODS =
 	| "GET"

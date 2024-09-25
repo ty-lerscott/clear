@@ -8,7 +8,7 @@ import {
 	type User as ClerkUser,
 } from "@clerk/nextjs/server";
 
-const normalize = (clerkUser: ClerkUser | null): User | undefined => {
+const normalize = (clerkUser: ClerkUser | undefined): User | undefined => {
 	if (!clerkUser) {
 		return;
 	}

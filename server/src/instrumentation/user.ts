@@ -6,10 +6,9 @@ import { tables } from "@repo/database/src/schemas";
 import { eq } from "drizzle-orm";
 import { NOT_FOUND, OK, SERVER_ERROR } from "@repo/config/src/status-codes";
 
-const user = {
+const userOrchestrator = {
 	createUser: async (id: string): Promise<Response> => {
 		try {
-			console.log("creating user");
 			await dbClient.insert(tables.Users).values({ id }).execute();
 
 			return {
@@ -101,4 +100,4 @@ const user = {
 	},
 };
 
-export default user;
+export default userOrchestrator;

@@ -1,6 +1,7 @@
 "use client";
 
 import dayjs from "dayjs";
+import Link from "next/link";
 import { SlOptionsVertical } from "react-icons/sl";
 import type { Row, Column } from "@tanstack/react-table";
 import {
@@ -12,32 +13,8 @@ import { Button } from "@/ui/button";
 import Separator from "@/ui/separator";
 import { kebabToTitleCase } from "@/utils";
 import { Badge, type BadgeProps } from "@/ui/badge";
+import type { JobPosting } from "@repo/types/job-posting";
 import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
-
-export type JobPosting = {
-	id: string;
-	title: string;
-	salary: {
-		min: number;
-		max: number;
-		currency: string;
-	};
-	company: string;
-	description: string;
-	jobBoard: "linkedin";
-	location: "in-office" | "remote" | "hybrid" | string;
-	status:
-		| "ready"
-		| "generating"
-		| "applied"
-		| "interviewing"
-		| "negotiating"
-		| "got-the-job"
-		| "no-answer"
-		| "rejected"
-		| "withdrew";
-	lastModified: string;
-};
 
 const formatSalary = (amount: number, currency: string) => {
 	const formatter = new Intl.NumberFormat("en-US", {
@@ -72,7 +49,7 @@ export const columns = [
 		cell: ({ row }: { row: Row<JobPosting> }) => {
 			const value = row.original.title;
 
-			return value ? <div className="min-w-[7.25rem]">{value}</div> : null;
+			return value ? <div className="min-w-[7.25rem]">{value}</div> : undefined;
 		},
 	},
 	{
@@ -98,7 +75,7 @@ export const columns = [
 		cell: ({ row }: { row: Row<JobPosting> }) => {
 			const value = row.original.jobBoard;
 
-			return value ? <Badge variant={value}>{value}</Badge> : null;
+			return value ? <Badge variant={value}>{value}</Badge> : undefined;
 		},
 	},
 	{
@@ -110,21 +87,31 @@ export const columns = [
 				: AiOutlineSortDescending;
 
 			return (
-				<Button
-					className="group"
-					variant="bare"
-					options="noPadding"
-					onClick={() => column.toggleSorting(isAscending)}
-				>
-					Company
-					<Icon className="size-5 ml-1 transition-opacity opacity-0 group-hover:opacity-80" />
-				</Button>
+				<>
+					<Button
+						className="group"
+						variant="bare"
+						options="noPadding"
+						onClick={() => column.toggleSorting(isAscending)}
+					>
+						Company
+						<Icon className="size-5 ml-1 transition-opacity opacity-0 group-hover:opacity-80" />
+					</Button>
+				</>
 			);
 		},
 		cell: ({ row }: { row: Row<JobPosting> }) => {
-			const value = row.original.company;
+			const company = row.original.company as JobPosting["company"];
 
-			return value ? <div className="min-w-[7.25rem]">{value}</div> : null;
+			return company?.name ? (
+				company.website ? (
+					<Link href={company.website} className="underline" target="_blank">
+						<span className="min-w-[7.25rem]">{company.name}</span>
+					</Link>
+				) : (
+					<span className="min-w-[7.25rem]">{company.name}</span>
+				)
+			) : undefined;
 		},
 	},
 	{
@@ -148,7 +135,7 @@ export const columns = [
 			);
 		},
 		cell: ({ row }: { row: Row<JobPosting> }) => {
-			const value = row.original.location;
+			const value = row.original.company?.location as string;
 			const isSpecific = !["remote", "hybrid", "in-office"].includes(value);
 			const variant = (isSpecific ? "default" : value) as BadgeProps["variant"];
 
@@ -158,17 +145,21 @@ export const columns = [
 						{!isSpecific ? kebabToTitleCase(value) : value}
 					</Badge>
 				</div>
-			) : null;
+			) : undefined;
 		},
 	},
 	{
 		accessorKey: "salary",
 		header: "Salary",
 		cell: ({ row: { original } }: { row: Row<JobPosting> }) => {
-			const { min, max, currency } = original?.salary ?? {};
+			const { min, max, currency } = (original?.salary ?? {}) as {
+				min: number;
+				max: number;
+				currency: string;
+			};
 
-			const minSalary = min ? formatSalary(min, currency) : null;
-			const maxSalary = max ? formatSalary(max, currency) : null;
+			const minSalary = min ? formatSalary(min, currency) : undefined;
+			const maxSalary = max ? formatSalary(max, currency) : undefined;
 
 			return (
 				<div className="min-w-[11.5rem]">
@@ -208,7 +199,7 @@ export const columns = [
 				<div className="min-w-[7.25rem]">
 					<Badge variant={value}>{kebabToTitleCase(value)}</Badge>
 				</div>
-			) : null;
+			) : undefined;
 		},
 	},
 	{

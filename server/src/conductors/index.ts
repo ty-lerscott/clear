@@ -1,5 +1,6 @@
 import UserConductor from "./user";
 import AuthConductor from "./auth";
+import JobPostingsConductor from "./job-postings";
 import type { NextFunction, Request, Response } from "express";
 import type { Conductor, Request as CustomRequest } from "@repo/types/api";
 
@@ -24,6 +25,9 @@ const Conductors = async (req: Request, res: Response, next: NextFunction) => {
 			break;
 		case "auth":
 			await AuthConductor(props);
+			break;
+		case "postings":
+			await JobPostingsConductor(props);
 			break;
 		default:
 			res.json({

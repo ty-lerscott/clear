@@ -58,7 +58,7 @@ const QueryProvider = ({ children }: { children: ReactNode }) => {
 		<QueryClientProvider client={queryClient}>
 			{children}
 			<Toaster expand richColors />
-			{IS_LOCAL ? <ReactQueryDevtools /> : null}
+			{IS_LOCAL ? <ReactQueryDevtools /> : undefined}
 		</QueryClientProvider>
 	);
 };

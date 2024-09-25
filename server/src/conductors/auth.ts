@@ -3,7 +3,7 @@ import type { User } from "@repo/types/user";
 import routeGuard from "@/utils/route-guard";
 import type { Conductor } from "@repo/types/api";
 import StatusCodes from "@repo/config/src/status-codes";
-import UserOrchestrator from "@/src/orchestrators/user";
+import UserOrchestrator from "@/src/instrumentation/user";
 
 /**
  * @description Handles webhooks from clerk authentication service.
@@ -32,7 +32,7 @@ const AuthConductor = async ({ req, res, next }: Conductor) => {
 				req.body.data.id,
 			);
 
-			res.status(status).json({ data, error });
+			res.status(status).json(data || error);
 			break;
 		}
 		case "user.deleted": {
@@ -40,7 +40,7 @@ const AuthConductor = async ({ req, res, next }: Conductor) => {
 				req.body.data.id,
 			);
 
-			res.status(status).json({ data, error });
+			res.status(status).json(data || error);
 			break;
 		}
 		default: {

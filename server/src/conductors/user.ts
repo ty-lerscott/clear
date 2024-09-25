@@ -1,7 +1,7 @@
 import type { User } from "@repo/types/user";
 import routeGuard from "@/utils/route-guard";
 import type { Conductor } from "@repo/types/api";
-import UserOrchestrator from "@/src/orchestrators/user";
+import UserOrchestrator from "@/src/instrumentation/user";
 
 const UserConductor = async ({ req, res, next }: Conductor) => {
 	const {
@@ -11,21 +11,19 @@ const UserConductor = async ({ req, res, next }: Conductor) => {
 	switch (route) {
 		case "update": {
 			const { error, status } = await routeGuard<User>(
-				//@ts-ignore - TODO: assign the proper types to the request
 				req,
 				UserOrchestrator.updateUser,
 			);
-			res.status(status).json({ error });
+			res.status(status).json(error);
 			break;
 		}
 		default: {
 			const { data, error, status } = await routeGuard<User>(
-				//@ts-ignore - TODO: assign the proper types to the request
 				req,
 				UserOrchestrator.fetchUser,
 			);
 
-			res.status(status).json({ data, error });
+			res.status(status).json(data || error);
 		}
 	}
 
