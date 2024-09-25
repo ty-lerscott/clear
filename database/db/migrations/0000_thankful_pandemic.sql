@@ -20,9 +20,9 @@ CREATE TABLE `postings` (
 --> statement-breakpoint
 CREATE TABLE `statusHistory` (
 	`id` text PRIMARY KEY NOT NULL,
-	`postingId` integer NOT NULL,
+	`postingId` text NOT NULL,
 	`status` text NOT NULL,
-	`modificationDate` text NOT NULL,
+	`date` text NOT NULL,
 	`notes` text,
 	FOREIGN KEY (`postingId`) REFERENCES `postings`(`id`) ON UPDATE no action ON DELETE cascade
 );

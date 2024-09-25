@@ -27,7 +27,10 @@ export const JobPostings = sqliteTable("postings", {
 		currency: string;
 	}>(),
 	description: text("description"),
-	jobBoard: text("jobBoard"),
+	jobBoard: text("jobBoard", { mode: "json" }).$type<{
+		name: string;
+		url?: string;
+	}>(),
 	status: text("status"),
 	userId: text("userId")
 		.references(() => Users.id, { onDelete: "cascade" })
@@ -37,23 +40,21 @@ export const JobPostings = sqliteTable("postings", {
 // StatusHistory Table
 export const StatusHistory = sqliteTable("statusHistory", {
 	id: text("id").primaryKey().$defaultFn(createId),
-	postingId: integer("postingId")
+	postingId: text("postingId")
 		.references(() => JobPostings.id, { onDelete: "cascade" })
 		.notNull(),
 	status: text("status", {
 		enum: [
-			"",
-			"applied",
-			"applying",
+			"ready",
 			"applied",
 			"interviewing",
 			"negotiating",
-			"landed-job",
-			"no-response",
+			"got-the-job",
+			"no-answer",
 			"rejected",
 			"withdrew",
 		],
 	}).notNull(),
-	modificationDate: text("modificationDate").notNull(),
+	date: text("date").notNull(),
 	notes: text("notes"),
 });

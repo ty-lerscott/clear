@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "9ee87176-41ef-4760-8a59-2d0f6261685d",
+  "id": "6b9c90ea-cc8f-4cb3-aed2-d157219f16bb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "companies": {
@@ -145,7 +145,7 @@
         },
         "postingId": {
           "name": "postingId",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -157,8 +157,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "modificationDate": {
-          "name": "modificationDate",
+        "date": {
+          "name": "date",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
