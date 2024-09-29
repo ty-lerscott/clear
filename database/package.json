@@ -7,10 +7,11 @@
 		"start": "npm run dev",
 		"start:studio": "drizzle-kit studio",
 		"db:generate": "rm -rf ./db/migrations && drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
 		"db:push": "drizzle-kit push",
 		"db:fake": "tsx src/generators/run.ts",
-		"db:import": "tsx src/import.ts",
-		"db:truncate": "tsx ./scripts/truncate.ts"
+		"db:truncate": "tsx ./scripts/truncate.ts",
+		"db:drop": "tsx ./scripts/drop.ts"
 	},
 	"type": "module",
 	"dependencies": {

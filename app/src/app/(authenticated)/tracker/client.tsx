@@ -118,6 +118,10 @@ const Client = () => {
 		await deleteMutation.mutateAsync({ id });
 	};
 
+	const toggleAddJobDialog = () => {
+		setAddJobDialogOpen((prevState) => !prevState);
+	};
+
 	const hasPosts = Array.isArray(postings) && postings?.length;
 
 	const columns = [
@@ -334,13 +338,6 @@ const Client = () => {
 			accessorKey: "options",
 			header: "",
 			cell: ({ row }: { row: Row<JobPosting> }) => {
-				/**
-				 * TODO: Generate a cover letter
-				 * TODO: View the job description
-				 * TODO: Edit the job posting
-				 * TODO: Delete the job posting
-				 * TODO: View the job posting
-				 */
 				return (
 					<Popover>
 						<PopoverTrigger>
@@ -355,7 +352,7 @@ const Client = () => {
 								</li>
 								<li>
 									<Button variant="bare" disabled>
-										Expand Posting
+										Change Status
 									</Button>
 								</li>
 								<li>
@@ -533,14 +530,13 @@ const Client = () => {
 						</Popover>
 					</>
 				) : null}
-				<Dialog open={addJobDialogOpen}>
+				<Dialog open={addJobDialogOpen} onOpenChange={toggleAddJobDialog}>
 					<DialogTrigger
 						className={cn(
 							"col-span-4",
 							hasPosts && "col-start-[26]",
 							buttonVariants({ variant: "default" }),
 						)}
-						onClick={() => setAddJobDialogOpen(true)}
 					>
 						Add Job
 					</DialogTrigger>

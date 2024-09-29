@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "6b9c90ea-cc8f-4cb3-aed2-d157219f16bb",
+  "id": "08e655fb-3ed9-4d3f-a15c-ced182189803",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "companies": {
@@ -21,8 +21,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "website": {
-          "name": "website",
+        "url": {
+          "name": "url",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -81,13 +81,6 @@
         },
         "jobBoard": {
           "name": "jobBoard",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "status": {
-          "name": "status",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

@@ -10,7 +10,7 @@ export const Users = sqliteTable("users", {
 export const Companies = sqliteTable("companies", {
 	id: text("id").primaryKey().$defaultFn(createId),
 	name: text("name").notNull(),
-	website: text("website"),
+	url: text("url"),
 	location: text("location"),
 });
 

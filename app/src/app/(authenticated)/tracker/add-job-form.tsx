@@ -62,7 +62,6 @@ export default function AddJobModal({ onSuccess }: { onSuccess: () => void }) {
 	});
 
 	const handleSubmit = async (values: JobPosting) => {
-		// const onlyDirt = getDirtyFields<Partial<User>>(user as User, values);
 		try {
 			await addJobPosting.mutateAsync({
 				...values,

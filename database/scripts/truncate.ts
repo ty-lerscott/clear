@@ -5,16 +5,15 @@ const TABLES = [
 	tables.Users,
 	tables.Companies,
 	tables.JobPostings,
-	tables.Applications,
 	tables.StatusHistory,
 ];
 
-const clearDB = async () => {
+const deleteDB = async () => {
 	for (const table of TABLES) {
 		await client.delete(table);
 	}
 };
 
 (async () => {
-	await clearDB();
+	await deleteDB();
 })();

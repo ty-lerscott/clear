@@ -7,7 +7,6 @@ export const companiesRelations = relations(Companies, ({ many }) => ({
 
 export const usersRelations = relations(Users, ({ many }) => ({
 	jobPostings: many(JobPostings),
-	statusHistory: many(StatusHistory),
 }));
 
 export const jobPostingsRelations = relations(JobPostings, ({ one, many }) => ({
@@ -19,10 +18,11 @@ export const jobPostingsRelations = relations(JobPostings, ({ one, many }) => ({
 		fields: [JobPostings.userId],
 		references: [Users.id],
 	}),
+	statusHistory: many(StatusHistory),
 }));
 
 export const statusHistoryRelations = relations(StatusHistory, ({ one }) => ({
-	posting: one(JobPostings, {
+	jobPosting: one(JobPostings, {
 		fields: [StatusHistory.postingId],
 		references: [JobPostings.id],
 	}),

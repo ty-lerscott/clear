@@ -10,9 +10,9 @@ export type JobBoard = {
 };
 
 export type Company = {
-	id: string;
+	id?: string;
 	name: string;
-	website?: string;
+	url?: string;
 	location?: "in-office" | "remote" | "hybrid" | string;
 };
 
