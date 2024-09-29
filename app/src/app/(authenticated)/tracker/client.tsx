@@ -29,14 +29,14 @@ import {
 } from "react-icons/ai";
 import {
 	AlertDialog,
+	AlertDialogTitle,
 	AlertDialogAction,
 	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
 	AlertDialogFooter,
 	AlertDialogHeader,
-	AlertDialogTitle,
+	AlertDialogContent,
 	AlertDialogTrigger,
+	AlertDialogDescription,
 } from "@/ui/alert-dialog";
 
 const formatSalary = (amount: number, currency: string) => {

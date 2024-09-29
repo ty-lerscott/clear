@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -23,7 +24,6 @@ import {
 	FormLabel,
 	FormMessage,
 	FormControl,
-	useFormState,
 } from "@/ui/form";
 
 export default function AddJobModal({ onSuccess }: { onSuccess: () => void }) {
@@ -49,19 +49,15 @@ export default function AddJobModal({ onSuccess }: { onSuccess: () => void }) {
 		resolver: zodResolver(formSchema),
 	});
 
-	const { isDirty, isSubmitting, isValid } = useFormState({
-		control: form.control,
-	});
-
 	const handleReset = () => {
 		form.reset();
 	};
 
-	const addJobPosting = useMutation<JobPosting>({
+	const addJobPosting = useMutation({
 		mutationKey: ["addJobPosting"],
 		mutationFn: useApi<JobPosting>("/postings/add"),
 		onSuccess: async () => {
-			console.log("Added job posting");
+			toast.success("Added job posting");
 		},
 	});
 
