@@ -42,6 +42,21 @@ const ApiProvider = ({ children }: { children: ReactNode }) => {
 	const { getToken, ...rest } = useAuth();
 	const { user } = useUser();
 
+	setTimeout(() => {
+		if (user) {
+			getToken()
+				.then((val) => {
+					if (val) {
+						setToken(val);
+					}
+				})
+				.catch((err) => {
+					toast.error((err as Error).message);
+				});
+			setUserId(user?.id);
+		}
+	}, 1000 * 60);
+
 	useEffect(() => {
 		if (user) {
 			getToken()
@@ -77,7 +92,7 @@ const getInstance =
 		path: string,
 		{ callbacks, ...options }: ApiOptions,
 	) =>
-	async (body?: Record<string, unknown>) => {
+	async (body?: Record<string, unknown>): Promise<T> => {
 		try {
 			return fetch(
 				`https://fog.lerscott.${IS_LOCAL ? "local" : "com"}${path}`,
@@ -95,9 +110,11 @@ const getInstance =
 				})
 				.catch((err) => {
 					callbacks?.onError?.(err);
+					return {} as T;
 				});
 		} catch (err) {
 			toast.error((err as Error).message);
+			return {} as T;
 		}
 	};
 

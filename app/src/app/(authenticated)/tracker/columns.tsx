@@ -15,17 +15,30 @@ import { kebabToTitleCase } from "@/utils";
 import { Badge, type BadgeProps } from "@/ui/badge";
 import type { JobPosting, JobBoard } from "@repo/types/job-posting";
 import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/ui/alert-dialog";
 
 const formatSalary = (amount: number, currency: string) => {
 	const formatter = new Intl.NumberFormat("en-US", {
 		style: "currency",
-		currency,
+		currency: currency || "USD",
 	});
 
 	return formatter.format(amount);
 };
 
-export const columns = [
+export const columns = ({
+	onDelete,
+}: { onDelete: (id: string) => () => void }) => [
 	{
 		accessorKey: "title",
 		header: ({ column }: { column: Column<JobPosting, unknown> }) => {
@@ -118,9 +131,9 @@ export const columns = [
 			const company = row.original.company as JobPosting["company"];
 
 			return company?.name ? (
-				company.website ? (
+				company.url ? (
 					<Link
-						href={company.website}
+						href={company.url}
 						className="underline hover:no-underline"
 						target="_blank"
 					>
@@ -273,13 +286,32 @@ export const columns = [
 								<Separator />
 							</li>
 							<li>
-								<Button
-									variant="bare"
-									className="text-red-600 hover:text-red-400 pb-0"
-									disabled
-								>
-									Delete Posting
-								</Button>
+								<AlertDialog>
+									<AlertDialogTrigger asChild>
+										<Button
+											variant="bare"
+											className="text-red-600 hover:text-red-400 pb-0"
+										>
+											Delete Post
+										</Button>
+									</AlertDialogTrigger>
+									<AlertDialogContent>
+										<AlertDialogHeader>
+											<AlertDialogTitle>Delete Job Posting</AlertDialogTitle>
+											<AlertDialogDescription>
+												This action cannot be undone.
+											</AlertDialogDescription>
+										</AlertDialogHeader>
+										<AlertDialogFooter>
+											<AlertDialogCancel>Cancel</AlertDialogCancel>
+											<AlertDialogAction
+												onClick={onDelete(row.original.id as string)}
+											>
+												Continue
+											</AlertDialogAction>
+										</AlertDialogFooter>
+									</AlertDialogContent>
+								</AlertDialog>
 							</li>
 						</ul>
 					</PopoverContent>

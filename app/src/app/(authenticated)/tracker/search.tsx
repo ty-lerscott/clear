@@ -2,7 +2,7 @@ import Input from "@/ui/input";
 import { cn } from "@/utils";
 import { IoSearch } from "react-icons/io5";
 import { matchSorter } from "match-sorter";
-import type { JobPosting } from "./columns";
+import type { JobPosting } from "@repo/types/job-posting";
 
 const Search = ({
 	data,
