@@ -9,9 +9,9 @@ const JobPostingsConductor = async ({ req, res, next }: Conductor) => {
 		extendedPath: [route],
 	} = req;
 	switch (route) {
-		case "add": {
+		case "add":
+		case "edit": {
 			const { data, error, status } = await routeGuard<JobPosting>(
-				//@ts-ignore - TODO: assign the proper types to the request
 				req,
 				JobPostingsOrchestrator.addPosting,
 			);
@@ -27,7 +27,6 @@ const JobPostingsConductor = async ({ req, res, next }: Conductor) => {
 			}
 
 			const { data, error, status } = await routeGuard<JobPosting>(
-				//@ts-ignore - TODO: assign the proper types to the request
 				req,
 				JobPostingsOrchestrator.deletePosting,
 			);
@@ -36,14 +35,21 @@ const JobPostingsConductor = async ({ req, res, next }: Conductor) => {
 			break;
 		}
 		default: {
-			const { data, error, status } = await routeGuard<JobPosting>(
-				//@ts-ignore - TODO: assign the proper types to the request
+			if (req.body.id) {
+				const { data, error, status } = await routeGuard<JobPosting>(
+					req,
+					JobPostingsOrchestrator.fetchPosting,
+				);
+
+				return res.status(status).json(data || error);
+			}
+
+			const { data, error, status } = await routeGuard<JobPosting[]>(
 				req,
 				JobPostingsOrchestrator.fetchPostings,
 			);
 
-			res.status(status).json(data || error);
-			break;
+			return res.status(status).json(data || error);
 		}
 	}
 

@@ -16,6 +16,16 @@ export type Company = {
 	location?: "in-office" | "remote" | "hybrid" | string;
 };
 
+export type DBJobPosting = {
+	id: string;
+	title: string;
+	description: string;
+	salary: Salary;
+	companyId: string;
+	jobBoard: JobBoard;
+	date: string;
+};
+
 export type RequiredJobPosting = {
 	id: string;
 	title: string;

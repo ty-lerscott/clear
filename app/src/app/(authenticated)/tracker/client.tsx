@@ -4,8 +4,14 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
+import { SlOptionsVertical } from "react-icons/sl";
 import { PiWaveSawtoothBold } from "react-icons/pi";
+import type { Row, Column } from "@tanstack/react-table";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import {
+	AiOutlineSortAscending,
+	AiOutlineSortDescending,
+} from "react-icons/ai";
 
 import Search from "./search";
 import { Card } from "@/ui/card";
@@ -16,17 +22,19 @@ import Checkbox from "@/src/ui/checkbox";
 import { DataTable } from "./data-table";
 import { useApi } from "@/src/providers/api";
 import { buttonVariants } from "@/ui/button";
-import { SlOptionsVertical } from "react-icons/sl";
+import EditJobForm from "@/ui/forms/edit-job";
 import { Badge, type BadgeProps } from "@/ui/badge";
-import type { Row, Column } from "@tanstack/react-table";
-import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
+import { statuses } from "./utils/job-post-statuses";
 import type { JobPosting, JobBoard } from "@repo/types/job-posting";
 import { camelToSentenceCase, cn, kebabToTitleCase } from "@/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
 import {
-	AiOutlineSortAscending,
-	AiOutlineSortDescending,
-} from "react-icons/ai";
+	Dialog,
+	DialogTitle,
+	DialogHeader,
+	DialogContent,
+	DialogDescription,
+} from "@/ui/dialog";
 import {
 	AlertDialog,
 	AlertDialogTitle,
@@ -48,18 +56,6 @@ const formatSalary = (amount: number, currency: string) => {
 	return formatter.format(amount);
 };
 
-const statuses = [
-	"ready",
-	"generating",
-	"applied",
-	"interviewing",
-	"negotiating",
-	"got-the-job",
-	"no-answer",
-	"rejected",
-	"withdrew",
-];
-
 const defaultColumns = {
 	title: true,
 	jobBoard: true,
@@ -73,6 +69,7 @@ const defaultColumns = {
 const Client = () => {
 	const [search, setSearch] = useState("");
 	const [addJobDialogOpen, setAddJobDialogOpen] = useState(false);
+	const [editJobDialogOpen, setEditJobDialogOpen] = useState(false);
 	const [filteredData, setFilteredData] = useState<JobPosting[]>([]);
 	const [activeColumns, setActiveColumns] = useState<{ [k: string]: boolean }>(
 		defaultColumns,
@@ -108,10 +105,9 @@ const Client = () => {
 		}));
 	};
 
-	const onAddJobSuccess = () => {
+	const onJobSuccess = () => {
 		setAddJobDialogOpen((prevState) => !prevState);
 		refetch();
-		toast.success("Job added successfully");
 	};
 
 	const deleteJobPosting = (id: string) => async () => {
@@ -121,8 +117,11 @@ const Client = () => {
 	const toggleAddJobDialog = () => {
 		setAddJobDialogOpen((prevState) => !prevState);
 	};
+	const toggleEditJobDialog = () => {
+		setEditJobDialogOpen((prevState) => !prevState);
+	};
 
-	const hasPosts = Array.isArray(postings) && postings?.length;
+	const hasPosts = Array.isArray(postings) && Boolean(postings?.length);
 
 	const columns = [
 		{
@@ -339,66 +338,87 @@ const Client = () => {
 			header: "",
 			cell: ({ row }: { row: Row<JobPosting> }) => {
 				return (
-					<Popover>
-						<PopoverTrigger>
-							<SlOptionsVertical className="text-muted size-4 transition-colors hover:text-primary" />
-						</PopoverTrigger>
-						<PopoverContent>
-							<ul className="list-none">
-								<li>
-									<Button variant="bare" disabled>
-										Edit Posting
-									</Button>
-								</li>
-								<li>
-									<Button variant="bare" disabled>
-										Change Status
-									</Button>
-								</li>
-								<li>
-									<Button variant="bare" disabled>
-										View Job Description
-									</Button>
-								</li>
-								<li>
-									<Button variant="bare" disabled>
-										Generate Cover Letter
-									</Button>
-								</li>
-								<li>
-									<Separator />
-								</li>
-								<li>
-									<AlertDialog>
-										<AlertDialogTrigger asChild>
-											<Button
-												variant="bare"
-												className="text-red-600 hover:text-red-400 pb-0"
-											>
-												Delete Post
-											</Button>
-										</AlertDialogTrigger>
-										<AlertDialogContent>
-											<AlertDialogHeader>
-												<AlertDialogTitle>Delete Job Posting</AlertDialogTitle>
-												<AlertDialogDescription>
-													This action cannot be undone.
-												</AlertDialogDescription>
-											</AlertDialogHeader>
-											<AlertDialogFooter>
-												<AlertDialogCancel>Cancel</AlertDialogCancel>
-												<AlertDialogAction
-													onClick={deleteJobPosting(row.original.id as string)}
+					<>
+						<Popover>
+							<PopoverTrigger>
+								<SlOptionsVertical className="text-muted size-4 transition-colors hover:text-primary" />
+							</PopoverTrigger>
+							<PopoverContent>
+								<ul className="list-none">
+									<li>
+										<Button variant="bare" onClick={toggleEditJobDialog}>
+											Edit Job
+										</Button>
+									</li>
+									<li>
+										<Button variant="bare" disabled>
+											View Job Description
+										</Button>
+									</li>
+									<li>
+										<Button variant="bare" disabled>
+											Generate Cover Letter
+										</Button>
+									</li>
+									<li>
+										<Separator />
+									</li>
+									<li>
+										<AlertDialog>
+											<AlertDialogTrigger asChild>
+												<Button
+													variant="bare"
+													className="text-red-600 hover:text-red-400 pb-0"
 												>
-													Continue
-												</AlertDialogAction>
-											</AlertDialogFooter>
-										</AlertDialogContent>
-									</AlertDialog>
-								</li>
-							</ul>
-						</PopoverContent>
-					</Popover>
+													Delete Post
+												</Button>
+											</AlertDialogTrigger>
+											<AlertDialogContent>
+												<AlertDialogHeader>
+													<AlertDialogTitle>
+														Delete Job Posting
+													</AlertDialogTitle>
+													<AlertDialogDescription>
+														This action cannot be undone.
+													</AlertDialogDescription>
+												</AlertDialogHeader>
+												<AlertDialogFooter>
+													<AlertDialogCancel>Cancel</AlertDialogCancel>
+													<AlertDialogAction
+														onClick={deleteJobPosting(
+															row.original.id as string,
+														)}
+													>
+														Continue
+													</AlertDialogAction>
+												</AlertDialogFooter>
+											</AlertDialogContent>
+										</AlertDialog>
+									</li>
+								</ul>
+							</PopoverContent>
+						</Popover>
+
+						<Dialog open={editJobDialogOpen} onOpenChange={toggleEditJobDialog}>
+							<DialogContent>
+								<DialogHeader>
+									<DialogTitle>Edit Job</DialogTitle>
+									<DialogDescription>
+										Edit the details for the job posting. Click "Update" when
+										you're done.
+									</DialogDescription>
+								</DialogHeader>
+								<EditJobForm
+									id={row.original.id as string}
+									onSuccess={() => {
+										toggleEditJobDialog();
+										refetch();
+									}}
+									closeDialog={toggleEditJobDialog}
+								/>
+							</DialogContent>
+						</Dialog>
+					</>
 				);
 			},
 		},
@@ -530,20 +550,13 @@ const Client = () => {
 						</Popover>
 					</>
 				) : null}
-				<Dialog open={addJobDialogOpen} onOpenChange={toggleAddJobDialog}>
-					<DialogTrigger
-						className={cn(
-							"col-span-4",
-							hasPosts && "col-start-[26]",
-							buttonVariants({ variant: "default" }),
-						)}
-					>
-						Add Job
-					</DialogTrigger>
-					<DialogContent>
-						<AddJobForm onSuccess={onAddJobSuccess} />
-					</DialogContent>
-				</Dialog>
+
+				<AddJobForm
+					hasPosts={hasPosts}
+					isOpen={addJobDialogOpen}
+					onSuccess={onJobSuccess}
+					onOpenChange={toggleAddJobDialog}
+				/>
 			</div>
 
 			<DataTable columns={columns} data={filteredData} />

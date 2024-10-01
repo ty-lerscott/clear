@@ -42,18 +42,7 @@ export const StatusHistory = sqliteTable("statusHistory", {
 	postingId: text("postingId")
 		.references(() => JobPostings.id, { onDelete: "cascade" })
 		.notNull(),
-	status: text("status", {
-		enum: [
-			"ready",
-			"applied",
-			"interviewing",
-			"negotiating",
-			"got-the-job",
-			"no-answer",
-			"rejected",
-			"withdrew",
-		],
-	}).notNull(),
+	status: text("status").notNull(),
 	date: text("date").notNull(),
 	notes: text("notes"),
 });

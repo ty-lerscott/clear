@@ -9,12 +9,16 @@ import { tables } from "@repo/database/src/schemas";
 import type {
 	Company,
 	JobPosting,
+	DBJobPosting,
 	RequiredJobPosting,
 } from "@repo/types/job-posting";
 import { SERVER_ERROR, OK } from "@repo/config/src/status-codes";
 
 const jobPostingsOrchestrator = {
-	fetchPostings: async (userId: string): Promise<Response<JobPosting[]>> => {
+	fetchPostings: async (
+		userId: string,
+		body: JobPosting,
+	): Promise<Response<JobPosting[]>> => {
 		try {
 			const postings = await dbClient
 				.select()
@@ -74,6 +78,64 @@ const jobPostingsOrchestrator = {
 			});
 		}
 	},
+	fetchPosting: async (
+		userId: string,
+		body: JobPosting,
+	): Promise<Response<JobPosting>> => {
+		const id = body.id as string;
+
+		try {
+			// console.log("step 1", id);
+			const [posting] = await dbClient
+				.select()
+				.from(tables.JobPostings)
+				.where(eq(tables.JobPostings.id, id))
+				.execute();
+			// console.log("step 2", posting);
+			const [statuses, companies] = await Promise.all([
+				dbClient
+					.select()
+					.from(tables.StatusHistory)
+					.where(eq(tables.StatusHistory.postingId, id))
+					.orderBy(desc(tables.StatusHistory.date))
+					.execute(),
+				dbClient
+					.select()
+					.from(tables.Companies)
+					.where(eq(tables.Companies.id, posting.companyId))
+					.execute(),
+			]);
+
+			// console.log("this is the posting", posting);
+
+			const mergedPosting = merge({}, omit(posting, ["companyId", "userId"]), {
+				company: omit(
+					companies.find(
+						(company) => company.id === posting.companyId,
+					) as Record<string, unknown>,
+					["id"],
+				),
+				description: posting.description || "",
+				...omit(
+					statuses.find((status) => status.postingId === posting.id) as Record<
+						string,
+						unknown
+					>,
+					["postingId", "notes", "id"],
+				),
+			}) as JobPosting;
+
+			return {
+				data: mergedPosting,
+				status: 200,
+			};
+		} catch (err) {
+			return Promise.resolve({
+				error: (err as Error).message,
+				status: SERVER_ERROR,
+			});
+		}
+	},
 	addPosting: async (
 		userId: string,
 		posting: JobPosting,
@@ -119,18 +181,24 @@ const jobPostingsOrchestrator = {
 				companyId = company[0].id;
 			}
 
+			const updatingValues = { ...newPosting, userId, companyId };
+
 			const [addedPosting] = await dbClient
 				.insert(tables.JobPostings)
-				.values({ ...newPosting, userId, companyId })
+				.values(updatingValues)
+				.onConflictDoUpdate({
+					target: tables.JobPostings.id,
+					set: updatingValues,
+				})
 				.returning({ id: tables.JobPostings.id })
 				.execute();
 
 			const [status] = await dbClient
 				.insert(tables.StatusHistory)
 				.values({
-					status: "ready",
 					postingId: addedPosting.id,
 					date: posting.date as string,
+					status: newPosting.status || "ready",
 				})
 				.returning();
 
@@ -151,12 +219,12 @@ const jobPostingsOrchestrator = {
 	},
 	deletePosting: async (
 		userId: string,
-		body: { id: string },
+		body: JobPosting,
 	): Promise<Response> => {
 		try {
 			await dbClient
 				.delete(tables.JobPostings)
-				.where(eq(tables.JobPostings.id, body.id))
+				.where(eq(tables.JobPostings.id, body.id as string))
 				.execute();
 
 			return {

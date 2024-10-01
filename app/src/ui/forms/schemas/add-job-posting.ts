@@ -7,6 +7,7 @@ const Errors = {
 };
 
 const formSchema = z.object({
+	id: z.string().optional(),
 	title: z
 		.string()
 		.min(2, {
@@ -30,6 +31,7 @@ const formSchema = z.object({
 		currency: z.string().optional(),
 	}),
 	description: z.string().optional(),
+	status: z.string().optional(),
 });
 
 export type UpdateUserSchema = z.infer<typeof formSchema>;
