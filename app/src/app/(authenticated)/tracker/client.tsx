@@ -347,7 +347,7 @@ const Client = () => {
 								<ul className="list-none">
 									<li>
 										<Button variant="bare" onClick={toggleEditJobDialog}>
-											Edit Job
+											Edit Post
 										</Button>
 									</li>
 									<li>

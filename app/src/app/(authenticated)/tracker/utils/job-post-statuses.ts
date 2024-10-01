@@ -16,8 +16,8 @@ const STATUSES = {
 	applied: "Applied",
 	interviewing: "Interviewing",
 	negotiating: "Negotiating",
-	gotTheJob: "Got The Job",
-	noAnswer: "No Answer",
+	"got-the-job": "Got The Job",
+	"no-answer": "No Answer",
 	rejected: "Rejected",
 	withdrew: "Withdrew",
 };
