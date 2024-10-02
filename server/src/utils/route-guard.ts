@@ -6,7 +6,6 @@ import type { Request as CustomRequest, Response } from "@repo/types/api";
 
 const IS_LOCAL = env.NODE_ENV !== "production";
 
-// TODO: This guard should take methods into account.
 const guardRoute = async <
 	T extends Record<string, unknown> | Record<string, unknown>[],
 >(

@@ -32,6 +32,7 @@ const formSchema = z.object({
 	}),
 	description: z.string().optional(),
 	status: z.string().optional(),
+	lastModified: z.string().optional(),
 });
 
 export type UpdateUserSchema = z.infer<typeof formSchema>;

@@ -1,18 +1,16 @@
-import { eq, desc } from "drizzle-orm";
-
 import omit from "object.omit";
 import merge from "lodash.mergewith";
-import inArray from "@/utils/drizzle-in-array";
+import { eq, desc } from "drizzle-orm";
+
 import type { Response } from "@repo/types/api";
 import dbClient from "@repo/database/src/client";
 import { tables } from "@repo/database/src/schemas";
+import { SERVER_ERROR, OK } from "@repo/config/src/status-codes";
 import type {
 	Company,
 	JobPosting,
-	DBJobPosting,
 	RequiredJobPosting,
 } from "@repo/types/job-posting";
-import { SERVER_ERROR, OK } from "@repo/config/src/status-codes";
 
 const jobPostingsOrchestrator = {
 	fetchPostings: async (
@@ -22,53 +20,24 @@ const jobPostingsOrchestrator = {
 		try {
 			const postings = await dbClient
 				.select()
-				.from(tables.JobPostings)
-				.where(eq(tables.JobPostings.userId, userId))
+				.from(tables.JobPosting)
+				.fullJoin(
+					tables.Company,
+					eq(tables.JobPosting.companyId, tables.Company.id),
+				)
+				.where(eq(tables.JobPosting.userId, userId))
+				.orderBy(desc(tables.JobPosting.lastModified))
 				.execute();
 
-			const [statuses, companies] = await Promise.all([
-				dbClient
-					.select()
-					.from(tables.StatusHistory)
-					.where(
-						inArray(
-							tables.StatusHistory.postingId,
-							postings.map(({ id }) => id),
-						),
-					)
-					.orderBy(desc(tables.StatusHistory.date))
-					.execute(),
-				dbClient
-					.select()
-					.from(tables.Companies)
-					.where(
-						inArray(
-							tables.Companies.id,
-							postings.map(({ companyId }) => companyId),
-						),
-					)
-					.execute(),
-			]);
-
-			const jobPostings = postings.map((posting) => {
-				return merge({}, omit(posting, ["companyId", "userId"]), {
-					company: omit(
-						companies.find(
-							(company) => company.id === posting.companyId,
-						) as Record<string, unknown>,
-						["id"],
-					),
-					...omit(
-						statuses.find(
-							(status) => status.postingId === posting.id,
-						) as Record<string, unknown>,
-						["postingId", "notes", "id"],
-					),
-				});
+			const newPostings = postings.map(({ posting, company }) => {
+				return {
+					...posting,
+					company,
+				};
 			}) as JobPosting[];
 
 			return {
-				data: jobPostings,
+				data: newPostings,
 				status: 200,
 			};
 		} catch (err) {
@@ -85,44 +54,20 @@ const jobPostingsOrchestrator = {
 		const id = body.id as string;
 
 		try {
-			// console.log("step 1", id);
-			const [posting] = await dbClient
+			const [{ posting, company }] = await dbClient
 				.select()
-				.from(tables.JobPostings)
-				.where(eq(tables.JobPostings.id, id))
+				.from(tables.JobPosting)
+				.fullJoin(
+					tables.Company,
+					eq(tables.JobPosting.companyId, tables.Company.id),
+				)
+				.where(eq(tables.JobPosting.id, id))
 				.execute();
-			// console.log("step 2", posting);
-			const [statuses, companies] = await Promise.all([
-				dbClient
-					.select()
-					.from(tables.StatusHistory)
-					.where(eq(tables.StatusHistory.postingId, id))
-					.orderBy(desc(tables.StatusHistory.date))
-					.execute(),
-				dbClient
-					.select()
-					.from(tables.Companies)
-					.where(eq(tables.Companies.id, posting.companyId))
-					.execute(),
-			]);
 
-			// console.log("this is the posting", posting);
-
-			const mergedPosting = merge({}, omit(posting, ["companyId", "userId"]), {
-				company: omit(
-					companies.find(
-						(company) => company.id === posting.companyId,
-					) as Record<string, unknown>,
-					["id"],
-				),
-				description: posting.description || "",
-				...omit(
-					statuses.find((status) => status.postingId === posting.id) as Record<
-						string,
-						unknown
-					>,
-					["postingId", "notes", "id"],
-				),
+			const mergedPosting = merge({}, posting, {
+				company: company,
+				description: posting?.description || "",
+				hasDescription: !!posting?.description,
 			}) as JobPosting;
 
 			return {
@@ -147,10 +92,11 @@ const jobPostingsOrchestrator = {
 						.split(".")[0]
 				: "";
 
-			const tempPosting = merge({}, omit(posting, ["company", "date"]), {
+			const tempPosting = merge({}, omit(posting, ["company"]), {
 				jobBoard: {
 					name: hostname,
 				},
+				status: posting.status || "ready",
 			});
 
 			const newPosting = omit(tempPosting, [
@@ -162,8 +108,8 @@ const jobPostingsOrchestrator = {
 
 			const company = await dbClient
 				.select()
-				.from(tables.Companies)
-				.where(eq(tables.Companies.name, (posting.company as Company).name))
+				.from(tables.Company)
+				.where(eq(tables.Company.name, (posting.company as Company).name))
 				.execute();
 
 			let companyId = "";
@@ -171,9 +117,9 @@ const jobPostingsOrchestrator = {
 			if (!company.length) {
 				console.log("company not found, creating new");
 				const [company] = await dbClient
-					.insert(tables.Companies)
+					.insert(tables.Company)
 					.values(posting.company as Company)
-					.returning({ id: tables.Companies.id })
+					.returning({ id: tables.Company.id })
 					.execute();
 
 				companyId = company.id;
@@ -181,33 +127,33 @@ const jobPostingsOrchestrator = {
 				companyId = company[0].id;
 			}
 
-			const updatingValues = { ...newPosting, userId, companyId };
+			const updatingValues = {
+				...newPosting,
+				userId,
+				companyId,
+			};
 
 			const [addedPosting] = await dbClient
-				.insert(tables.JobPostings)
+				.insert(tables.JobPosting)
 				.values(updatingValues)
 				.onConflictDoUpdate({
-					target: tables.JobPostings.id,
+					target: tables.JobPosting.id,
 					set: updatingValues,
 				})
-				.returning({ id: tables.JobPostings.id })
+				.returning({ id: tables.JobPosting.id })
 				.execute();
 
-			const [status] = await dbClient
-				.insert(tables.StatusHistory)
-				.values({
-					postingId: addedPosting.id,
-					date: posting.date as string,
-					status: newPosting.status || "ready",
-				})
-				.returning();
+			await dbClient.insert(tables.StatusHistory).values({
+				postingId: addedPosting.id,
+				date: posting.lastModified as string,
+				status: newPosting.status,
+			});
 
 			return {
 				status: OK,
 				data: {
-					...addedPosting,
-					...omit(status, ["id", "postingId"]),
 					...newPosting,
+					...addedPosting,
 				},
 			};
 		} catch (err) {
@@ -223,8 +169,8 @@ const jobPostingsOrchestrator = {
 	): Promise<Response> => {
 		try {
 			await dbClient
-				.delete(tables.JobPostings)
-				.where(eq(tables.JobPostings.id, body.id as string))
+				.delete(tables.JobPosting)
+				.where(eq(tables.JobPosting.id, body.id as string))
 				.execute();
 
 			return {

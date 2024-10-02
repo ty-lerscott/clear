@@ -5,8 +5,8 @@ export type Salary = {
 };
 
 export type JobBoard = {
-	name: string;
 	url: string;
+	name: string;
 };
 
 export type Company = {
@@ -16,34 +16,17 @@ export type Company = {
 	location?: "in-office" | "remote" | "hybrid" | string;
 };
 
-export type DBJobPosting = {
-	id: string;
-	title: string;
-	description: string;
-	salary: Salary;
-	companyId: string;
-	jobBoard: JobBoard;
-	date: string;
-};
-
 export type RequiredJobPosting = {
 	id: string;
+	date: string;
 	title: string;
-	description: string;
 	salary: Salary;
-	status:
-		| "ready"
-		| "generating"
-		| "applied"
-		| "interviewing"
-		| "negotiating"
-		| "got-the-job"
-		| "no-answer"
-		| "rejected"
-		| "withdrew";
+	status: string;
 	company: Company;
 	jobBoard: JobBoard;
-	date: string;
+	description: string;
+	lastModified: string;
+	hasDescription: boolean;
 };
 
 export type JobPosting = Partial<RequiredJobPosting>;

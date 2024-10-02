@@ -74,6 +74,7 @@ export default function AddJobModal({
 			toast.success("Successfully added job posting");
 
 			onSuccess();
+			handleReset();
 		},
 	});
 
@@ -81,7 +82,7 @@ export default function AddJobModal({
 		try {
 			await addJobPosting.mutateAsync({
 				...values,
-				date: new Date().toISOString(),
+				lastModified: new Date().toISOString(),
 			});
 		} catch (err) {
 			console.error(err);

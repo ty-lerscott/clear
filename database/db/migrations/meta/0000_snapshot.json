@@ -1,11 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "dc433dd6-b600-417f-8bc3-5ffa60cd0e0b",
+  "id": "1f4e3eac-54eb-421b-8017-bea393a8a113",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "companies": {
-      "name": "companies",
+    "company": {
+      "name": "company",
       "columns": {
         "id": {
           "name": "id",
@@ -41,8 +41,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "postings": {
-      "name": "postings",
+    "posting": {
+      "name": "posting",
       "columns": {
         "id": {
           "name": "id",
@@ -86,6 +86,20 @@
           "notNull": false,
           "autoincrement": false
         },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "lastModified": {
+          "name": "lastModified",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "userId": {
           "name": "userId",
           "type": "text",
@@ -96,10 +110,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "postings_companyId_companies_id_fk": {
-          "name": "postings_companyId_companies_id_fk",
-          "tableFrom": "postings",
-          "tableTo": "companies",
+        "posting_companyId_company_id_fk": {
+          "name": "posting_companyId_company_id_fk",
+          "tableFrom": "posting",
+          "tableTo": "company",
           "columnsFrom": [
             "companyId"
           ],
@@ -109,10 +123,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "postings_userId_users_id_fk": {
-          "name": "postings_userId_users_id_fk",
-          "tableFrom": "postings",
-          "tableTo": "users",
+        "posting_userId_user_id_fk": {
+          "name": "posting_userId_user_id_fk",
+          "tableFrom": "posting",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
@@ -167,10 +181,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "statusHistory_postingId_postings_id_fk": {
-          "name": "statusHistory_postingId_postings_id_fk",
+        "statusHistory_postingId_posting_id_fk": {
+          "name": "statusHistory_postingId_posting_id_fk",
           "tableFrom": "statusHistory",
-          "tableTo": "postings",
+          "tableTo": "posting",
           "columnsFrom": [
             "postingId"
           ],
@@ -184,8 +198,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "users": {
-      "name": "users",
+    "user": {
+      "name": "user",
       "columns": {
         "id": {
           "name": "id",

@@ -1,29 +1,29 @@
 import { relations } from "drizzle-orm";
-import { Companies, JobPostings, StatusHistory, Users } from "./tables";
+import { Company, JobPosting, StatusHistory, User } from "./tables";
 
-export const companiesRelations = relations(Companies, ({ many }) => ({
-	jobPostings: many(JobPostings),
+export const companyRelations = relations(Company, ({ many }) => ({
+	jobPostings: many(JobPosting),
 }));
 
-export const usersRelations = relations(Users, ({ many }) => ({
-	jobPostings: many(JobPostings),
+export const usersRelations = relations(User, ({ many }) => ({
+	jobPostings: many(JobPosting),
 }));
 
-export const jobPostingsRelations = relations(JobPostings, ({ one, many }) => ({
-	company: one(Companies, {
-		fields: [JobPostings.companyId],
-		references: [Companies.id],
+export const jobPostingRelations = relations(JobPosting, ({ one, many }) => ({
+	company: one(Company, {
+		fields: [JobPosting.companyId],
+		references: [Company.id],
 	}),
-	user: one(Users, {
-		fields: [JobPostings.userId],
-		references: [Users.id],
+	user: one(User, {
+		fields: [JobPosting.userId],
+		references: [User.id],
 	}),
 	statusHistory: many(StatusHistory),
 }));
 
 export const statusHistoryRelations = relations(StatusHistory, ({ one }) => ({
-	jobPosting: one(JobPostings, {
+	jobPosting: one(JobPosting, {
 		fields: [StatusHistory.postingId],
-		references: [JobPostings.id],
+		references: [JobPosting.id],
 	}),
 }));

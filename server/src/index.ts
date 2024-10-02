@@ -13,9 +13,11 @@ import { ClerkExpressWithAuth } from "@clerk/clerk-sdk-node";
 const server = express();
 
 const IS_LOCAL = env.NODE_ENV !== "production";
+
 const urlEncoded = bodyParser.urlencoded({
 	extended: true,
 });
+
 const ClerkMiddleware = ClerkExpressWithAuth({
 	jwtKey: env.CLERK_JWT,
 });

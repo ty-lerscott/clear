@@ -2,9 +2,9 @@ import client from "@/client";
 import { tables } from "@/schemas";
 
 const TABLES = [
-	tables.Users,
-	tables.Companies,
-	tables.JobPostings,
+	tables.User,
+	tables.Company,
+	tables.JobPosting,
 	tables.StatusHistory,
 ];
 

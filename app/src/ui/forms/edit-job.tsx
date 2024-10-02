@@ -87,7 +87,7 @@ const EditJob = ({
 		try {
 			await editJobPosting.mutateAsync({
 				...values,
-				date: new Date().toISOString(),
+				lastModified: new Date().toISOString(),
 			});
 		} catch (err) {
 			console.error(err);

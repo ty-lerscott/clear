@@ -317,7 +317,9 @@ const Client = () => {
 				 */
 				return value ? (
 					<div className="min-w-[7.25rem]">
-						<Badge variant={value}>{kebabToTitleCase(value)}</Badge>
+						<Badge variant={value as BadgeProps["variant"]}>
+							{kebabToTitleCase(value)}
+						</Badge>
 					</div>
 				) : undefined;
 			},
@@ -328,7 +330,7 @@ const Client = () => {
 			cell: ({ row }: { row: Row<JobPosting> }) => {
 				return (
 					<div className="min-w-[11.25rem]">
-						{dayjs(row.original.date).format("ddd MMM DD hh:mm A")}
+						{dayjs(row.original.lastModified).format("ddd MMM DD hh:mm A")}
 					</div>
 				);
 			},
@@ -351,7 +353,10 @@ const Client = () => {
 										</Button>
 									</li>
 									<li>
-										<Button variant="bare" disabled>
+										<Button
+											variant="bare"
+											disabled={!row.original.hasDescription}
+										>
 											View Job Description
 										</Button>
 									</li>
